@@ -1,4 +1,5 @@
-import { detectSensitiveData, DetectionResult } from '../detection/india-rules';
+import { detectSensitiveData } from '../detection/india-rules';
+import type { DetectionResult } from '../detection/india-rules';
 
 export function sanitizePrompt(text: string): {
   sanitizedText: string;

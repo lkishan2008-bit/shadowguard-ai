@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { sanitizePrompt } from './redaction/redactor';
-import { DetectionResult } from './detection/india-rules';
+import type { DetectionResult } from './detection/india-rules';
 
 export default function App() {
   const [inputPrompt, setInputPrompt] = useState<string>('');
