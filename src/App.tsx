@@ -13,6 +13,8 @@ import { InteractiveDemoView } from './components/demo/InteractiveDemoView';
 import { ZeroDataIndiaView } from './components/architecture/ZeroDataIndiaView';
 import { SettingsView } from './components/settings/SettingsView';
 import { ExtensionPopupModal } from './components/extension/ExtensionPopupModal';
+import { detectSensitiveData } from './detection/india-rules';
+import { supabase } from './lib/supabase';
 import {
   INITIAL_INCIDENTS,
   INITIAL_EMPLOYEES,
@@ -107,7 +109,7 @@ export default function App() {
     setPolicies((prev) => [newRule, ...prev]);
   };
 
-  const handleNewIncidentCreated = (newInc: SecurityIncident) => {
+  const handleNewIncidentCreated = async (newInc: SecurityIncident) => {
     setIncidents((prev) => [newInc, ...prev]);
 
     // Show top-right enterprise SOC toast notification
@@ -120,6 +122,17 @@ export default function App() {
     setTimeout(() => {
       setLiveToast((prev) => ({ ...prev, show: false }));
     }, 6000);
+
+    const results = detectSensitiveData(newInc.rawTextPreview || '');
+    if (results.length > 0) {
+      const logsToInsert = results.map((item) => ({
+        category: item.category,
+        severity: item.severity,
+        matched_text: item.matchedText,
+        redacted_count: 1,
+      }));
+      await supabase.from('pii_logs').insert(logsToInsert);
+    }
   };
 
   return (
