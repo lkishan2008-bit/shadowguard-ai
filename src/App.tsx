@@ -12,65 +12,20 @@ const CATEGORY_SEVERITY: Record<string, DetectionResult['severity']> = {
   EMAIL_ADDRESS: 'LOW',
 };
 
-// ─── Inline pill badge styling using token variables ─────────────────────────
-function getPillStyle(severity: DetectionResult['severity']) {
-  switch (severity) {
-    case 'CRITICAL':
-      return {
-        backgroundColor: 'rgba(224, 112, 112, 0.12)',
-        color: 'var(--danger)',
-        borderColor: 'rgba(224, 112, 112, 0.35)',
-      };
-    case 'HIGH':
-      return {
-        backgroundColor: 'rgba(212, 165, 116, 0.12)',
-        color: 'var(--warn)',
-        borderColor: 'rgba(212, 165, 116, 0.35)',
-      };
-    case 'MEDIUM':
-      return {
-        backgroundColor: 'rgba(212, 165, 116, 0.08)',
-        color: 'var(--warn)',
-        borderColor: 'rgba(212, 165, 116, 0.25)',
-      };
-    default:
-      return {
-        backgroundColor: 'rgba(125, 186, 158, 0.12)',
-        color: 'var(--ok)',
-        borderColor: 'rgba(125, 186, 158, 0.35)',
-      };
-  }
-}
+// ─── Severity pill styling (high contrast & crisp borders) ───────────────────
+const SEVERITY_PILL_CLASS: Record<DetectionResult['severity'], string> = {
+  CRITICAL: 'bg-red-950/90 text-red-300 border-red-700/80',
+  HIGH: 'bg-orange-950/90 text-orange-300 border-orange-700/80',
+  MEDIUM: 'bg-amber-950/90 text-amber-300 border-amber-700/80',
+  LOW: 'bg-emerald-950/90 text-emerald-300 border-emerald-700/80',
+};
 
-// ─── Table badge styling using token variables ──────────────────────────────
-function getBadgeStyle(severity: DetectionResult['severity']) {
-  switch (severity) {
-    case 'CRITICAL':
-      return {
-        backgroundColor: 'rgba(224, 112, 112, 0.12)',
-        color: 'var(--danger)',
-        borderColor: 'rgba(224, 112, 112, 0.3)',
-      };
-    case 'HIGH':
-      return {
-        backgroundColor: 'rgba(212, 165, 116, 0.12)',
-        color: 'var(--warn)',
-        borderColor: 'rgba(212, 165, 116, 0.3)',
-      };
-    case 'MEDIUM':
-      return {
-        backgroundColor: 'rgba(212, 165, 116, 0.08)',
-        color: 'var(--warn)',
-        borderColor: 'rgba(212, 165, 116, 0.2)',
-      };
-    default:
-      return {
-        backgroundColor: 'rgba(125, 186, 158, 0.12)',
-        color: 'var(--ok)',
-        borderColor: 'rgba(125, 186, 158, 0.3)',
-      };
-  }
-}
+const SEVERITY_BADGE_CLASS: Record<DetectionResult['severity'], string> = {
+  CRITICAL: 'bg-red-950/80 text-red-300 border-red-700/70',
+  HIGH: 'bg-orange-950/80 text-orange-300 border-orange-700/70',
+  MEDIUM: 'bg-amber-950/80 text-amber-300 border-amber-700/70',
+  LOW: 'bg-emerald-950/80 text-emerald-300 border-emerald-700/70',
+};
 
 // ─── Parse sanitized text into text runs + styled pill badges ────────────────
 function renderSanitizedOutput(text: string) {
@@ -82,11 +37,7 @@ function renderSanitizedOutput(text: string) {
       return (
         <span
           key={i}
-          style={{
-            ...getPillStyle(severity),
-            fontFamily: 'var(--font-mono)',
-          }}
-          className="inline-flex items-center px-2 py-0.5 rounded-md border text-xs mx-0.5 align-middle font-medium"
+          className={`inline-flex items-center px-2 py-0.5 rounded-md border font-mono text-xs mx-0.5 align-middle font-medium shadow-sm ${SEVERITY_PILL_CLASS[severity]}`}
         >
           {part}
         </span>
@@ -96,7 +47,7 @@ function renderSanitizedOutput(text: string) {
   });
 }
 
-// ─── Shield icon ─────────────────────────────────────────────────────────────
+// ─── Shield Icon ─────────────────────────────────────────────────────────────
 function ShieldIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +61,7 @@ function ShieldIcon({ className }: { className?: string }) {
   );
 }
 
-// ─── App ──────────────────────────────────────────────────────────────────────
+// ─── App Component ───────────────────────────────────────────────────────────
 export default function App() {
   const [inputPrompt, setInputPrompt] = useState<string>('');
   const [sanitizedOutput, setSanitizedOutput] = useState<string>('');
@@ -139,101 +90,54 @@ export default function App() {
   const criticalCount = findings.filter((f) => f.severity === 'CRITICAL').length;
 
   return (
-    <div
-      style={{
-        backgroundColor: 'var(--bg)',
-        color: 'var(--fg)',
-        fontFamily: 'var(--font-sans)',
-      }}
-      className="min-h-screen"
-    >
-      {/* Top accent rule */}
-      <div
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, var(--border-strong) 50%, transparent 100%)',
-          height: '1px',
-        }}
-        className="w-full"
-      />
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+      {/* Top Emerald Accent Rule */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-emerald-500/60 to-transparent" />
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
 
         {/* ── Header ── */}
-        <header className="mb-8 flex flex-wrap justify-between items-center gap-4">
+        <header className="max-w-6xl mx-auto mb-8 border-b border-slate-800 pb-5 flex flex-wrap justify-between items-center gap-4">
           <div>
             <div className="flex items-center gap-2.5 mb-1">
-              <ShieldIcon className="w-6 h-6 text-[var(--ok)]" />
-              <h1 className="text-2xl font-semibold tracking-tight text-[var(--fg)]">
-                ShadowGuard <span style={{ color: 'var(--ok)' }}>AI</span>
+              <ShieldIcon className="w-7 h-7 text-emerald-400" />
+              <h1 className="text-2xl font-bold tracking-tight text-white">
+                ShadowGuard <span className="text-emerald-400">AI</span>
               </h1>
             </div>
-            <p className="text-sm pl-8.5 text-[var(--muted)]">
+            <p className="text-sm text-slate-400 pl-9.5">
               Privacy-First AI Data Loss Prevention Engine
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             {criticalCount > 0 && (
-              <span
-                style={{
-                  backgroundColor: 'rgba(224, 112, 112, 0.12)',
-                  color: 'var(--danger)',
-                  borderColor: 'rgba(224, 112, 112, 0.35)',
-                  borderRadius: 'var(--radius)',
-                  fontFamily: 'var(--font-sans)',
-                }}
-                className="flex items-center gap-1.5 px-3 py-1 border text-xs font-medium backdrop-blur-sm"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--danger)] animate-pulse" />
+              <span className="flex items-center gap-1.5 px-3 py-1 bg-red-950 text-red-400 border border-red-800 rounded-full text-xs font-semibold shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
                 {criticalCount} CRITICAL
               </span>
             )}
-            <span
-              style={{
-                backgroundColor: 'rgba(125, 186, 158, 0.1)',
-                color: 'var(--ok)',
-                borderColor: 'rgba(125, 186, 158, 0.3)',
-                borderRadius: 'var(--radius)',
-                fontFamily: 'var(--font-sans)',
-              }}
-              className="flex items-center gap-1.5 px-3 py-1 border text-xs font-medium backdrop-blur-sm"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
+            <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded-full text-xs font-semibold shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               India DLP Active
             </span>
           </div>
         </header>
 
-        {/* ── Two-column panels ── */}
+        {/* ── Main Layout: Input / Output Panels ── */}
         <main className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {/* Input Panel */}
-          <div
-            style={{
-              backgroundColor: 'var(--elevated)',
-              borderColor: 'var(--border)',
-              borderRadius: 'var(--radius)',
-            }}
-            className="border p-6 flex flex-col shadow-lg transition-colors duration-200"
-          >
+          {/* Input Column */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-3">
-              <label
-                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
-                className="text-xs font-medium uppercase tracking-wider"
-              >
-                Raw Prompt Input
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Incoming AI Prompt (Raw Text)
               </label>
               <button
                 id="clear-btn"
+                type="button"
                 onClick={handleClear}
-                style={{
-                  color: 'var(--muted)',
-                  borderColor: 'var(--border)',
-                  backgroundColor: 'var(--subtle)',
-                  borderRadius: '8px',
-                  fontFamily: 'var(--font-sans)',
-                }}
-                className="text-xs px-2.5 py-1 border transition-colors hover:text-[var(--fg)] hover:border-[var(--border-strong)]"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs px-3 py-1 rounded-lg font-medium transition-colors"
               >
                 Clear
               </button>
@@ -241,14 +145,7 @@ export default function App() {
 
             <textarea
               id="raw-prompt-input"
-              style={{
-                backgroundColor: 'var(--bg)',
-                borderColor: 'var(--border)',
-                color: 'var(--fg)',
-                fontFamily: 'var(--font-mono)',
-                borderRadius: '12px',
-              }}
-              className="w-full flex-grow border p-3.5 text-sm focus:outline-none focus:border-[var(--border-strong)] resize-none min-h-[220px] placeholder-[var(--faint)] transition-all duration-200"
+              className="w-full flex-grow bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-100 text-sm focus:outline-none focus:border-emerald-500 font-mono resize-none min-h-[220px] placeholder:text-slate-500 transition-colors shadow-inner"
               placeholder="Paste prompt containing sensitive data (e.g., Aadhaar, PAN, AWS keys)..."
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
@@ -256,49 +153,27 @@ export default function App() {
 
             <button
               id="scan-btn"
+              type="button"
               onClick={handleScan}
               disabled={!inputPrompt.trim()}
-              style={{
-                backgroundColor: inputPrompt.trim() ? 'var(--accent)' : 'var(--subtle)',
-                color: inputPrompt.trim() ? 'var(--accent-fg)' : 'var(--faint)',
-                borderColor: 'var(--border)',
-                borderRadius: '12px',
-                fontFamily: 'var(--font-sans)',
-              }}
-              className="mt-4 w-full font-semibold py-2.5 border transition-all duration-200 text-sm disabled:cursor-not-allowed shadow-md"
+              className="mt-4 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-xl transition-colors text-sm shadow-md shadow-emerald-950/40"
             >
               Inspect &amp; Redact
             </button>
           </div>
 
-          {/* Output Panel */}
-          <div
-            style={{
-              backgroundColor: 'var(--elevated)',
-              borderColor: 'var(--border)',
-              borderRadius: 'var(--radius)',
-            }}
-            className="border p-6 flex flex-col shadow-lg transition-colors duration-200"
-          >
+          {/* Output Column */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 flex flex-col shadow-xl">
             <div className="flex items-center justify-between mb-3">
-              <label
-                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
-                className="text-xs font-medium uppercase tracking-wider"
-              >
-                Sanitized Output
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                Sanitized Prompt (Safe for LLM)
               </label>
               <button
                 id="copy-btn"
+                type="button"
                 onClick={handleCopy}
                 disabled={!sanitizedOutput}
-                style={{
-                  color: sanitizedOutput ? (copied ? 'var(--ok)' : 'var(--fg)') : 'var(--faint)',
-                  borderColor: 'var(--border)',
-                  backgroundColor: 'var(--subtle)',
-                  borderRadius: '8px',
-                  fontFamily: 'var(--font-sans)',
-                }}
-                className="text-xs px-2.5 py-1 border transition-colors disabled:cursor-not-allowed hover:border-[var(--border-strong)]"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs px-3 py-1 rounded-lg font-medium transition-colors"
               >
                 {copied ? '✓ Copied' : 'Copy'}
               </button>
@@ -306,106 +181,66 @@ export default function App() {
 
             <div
               id="sanitized-output"
-              style={{
-                backgroundColor: 'var(--bg)',
-                borderColor: 'var(--border)',
-                fontFamily: 'var(--font-mono)',
-                borderRadius: '12px',
-              }}
-              className="w-full flex-grow border p-3.5 text-sm overflow-auto min-h-[220px] leading-relaxed"
+              className="w-full flex-grow bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-sm font-mono overflow-auto min-h-[220px] leading-relaxed shadow-inner"
             >
               {sanitizedOutput ? (
-                <span style={{ color: 'var(--fg)' }} className="whitespace-pre-wrap break-words">
+                <span className="text-slate-100 whitespace-pre-wrap break-words">
                   {renderSanitizedOutput(sanitizedOutput)}
                 </span>
               ) : (
-                <span style={{ color: 'var(--faint)' }} className="italic text-xs">
-                  Sanitized prompt will appear here after inspection…
+                <span className="text-slate-500 italic text-xs">
+                  Sanitized prompt will appear here after inspection...
                 </span>
               )}
             </div>
           </div>
 
-          {/* ── Findings Table ── */}
-          <div
-            style={{
-              backgroundColor: 'var(--elevated)',
-              borderColor: 'var(--border)',
-              borderRadius: 'var(--radius)',
-            }}
-            className="md:col-span-2 border p-6 shadow-lg"
-          >
-            <div className="flex items-center justify-between mb-5">
-              <h2
-                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
-                className="text-xs font-medium uppercase tracking-wider"
-              >
+          {/* ── Findings Panel ── */}
+          <div className="md:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
                 Detected Threats / PII
               </h2>
               <div className="flex items-center gap-3">
                 {findings.some((f) => f.severity === 'CRITICAL' || f.severity === 'HIGH') && (
-                  <span style={{ color: 'var(--danger)' }} className="flex items-center gap-1.5 text-xs font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--danger)] animate-pulse" />
+                  <span className="flex items-center gap-1.5 text-red-400 text-xs font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
                     Active threats
                   </span>
                 )}
-                <span
-                  style={{
-                    backgroundColor: 'var(--subtle)',
-                    color: 'var(--muted)',
-                    borderColor: 'var(--border)',
-                    borderRadius: '8px',
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                  className="border px-2.5 py-0.5 text-xs font-medium"
-                >
+                <span className="bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-0.5 rounded-lg text-xs font-mono font-medium">
                   {findings.length} findings
                 </span>
               </div>
             </div>
 
             {findings.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10" style={{ color: 'var(--faint)' }}>
-                <ShieldIcon className="w-10 h-10 mb-3 opacity-25" />
-                <p className="text-xs italic" style={{ fontFamily: 'var(--font-sans)' }}>
-                  No sensitive data detected. Enter text above and click Inspect.
+              <div className="flex flex-col items-center justify-center py-10 text-slate-500">
+                <ShieldIcon className="w-10 h-10 mb-3 opacity-30 text-slate-400" />
+                <p className="text-xs italic">
+                  No sensitive data detected yet. Enter text above and click Inspect &amp; Redact.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs" style={{ color: 'var(--fg)' }}>
-                  <thead>
-                    <tr
-                      style={{
-                        borderColor: 'var(--border)',
-                        color: 'var(--muted)',
-                        fontFamily: 'var(--font-sans)',
-                      }}
-                      className="text-[11px] font-medium uppercase tracking-wider border-b"
-                    >
-                      <th className="pb-3 px-3">Category</th>
-                      <th className="pb-3 px-3">Severity</th>
-                      <th className="pb-3 px-3">Matched Value</th>
-                      <th className="pb-3 px-3 text-right">Offset</th>
+                <table className="w-full text-left text-xs text-slate-200">
+                  <thead className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="p-3 font-semibold uppercase tracking-wider text-[11px]">Category</th>
+                      <th className="p-3 font-semibold uppercase tracking-wider text-[11px]">Severity</th>
+                      <th className="p-3 font-semibold uppercase tracking-wider text-[11px]">Matched Text</th>
+                      <th className="p-3 font-semibold uppercase tracking-wider text-[11px] text-right">Offset</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="divide-y divide-slate-800">
                     {findings.map((item, idx) => (
-                      <tr
-                        key={idx}
-                        style={{ borderColor: 'var(--border)' }}
-                        className="border-b transition-colors duration-150 hover:bg-[var(--subtle)]"
-                      >
-                        <td
-                          style={{ color: 'var(--ok)', fontFamily: 'var(--font-mono)' }}
-                          className="py-3 px-3 font-medium"
-                        >
+                      <tr key={idx} className="hover:bg-slate-950/60 transition-colors">
+                        <td className="p-3 font-mono text-emerald-400 font-medium">
                           {item.category}
                         </td>
-                        <td className="py-3 px-3">
+                        <td className="p-3">
                           <span
-                            style={getBadgeStyle(item.severity)}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-semibold"
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-bold ${SEVERITY_BADGE_CLASS[item.severity]}`}
                           >
                             {(item.severity === 'CRITICAL' || item.severity === 'HIGH') && (
                               <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
@@ -413,13 +248,10 @@ export default function App() {
                             {item.severity}
                           </span>
                         </td>
-                        <td style={{ fontFamily: 'var(--font-mono)' }} className="py-3 px-3">
+                        <td className="p-3 font-mono text-slate-100">
                           {item.match}
                         </td>
-                        <td
-                          style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}
-                          className="py-3 px-3 text-right text-[11px]"
-                        >
+                        <td className="p-3 text-right font-mono text-slate-400 text-[11px]">
                           {item.start}–{item.end}
                         </td>
                       </tr>
@@ -432,22 +264,10 @@ export default function App() {
         </main>
 
         {/* ── Footer ── */}
-        <footer
-          style={{ color: 'var(--faint)', fontFamily: 'var(--font-sans)' }}
-          className="mt-8 text-center text-xs"
-        >
+        <footer className="mt-8 text-center text-slate-500 text-xs">
           ShadowGuard AI &middot; India DLP Engine &middot; {new Date().getFullYear()}
         </footer>
       </div>
-
-      {/* Bottom accent rule */}
-      <div
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, var(--border) 50%, transparent 100%)',
-          height: '1px',
-        }}
-        className="w-full"
-      />
     </div>
   );
 }

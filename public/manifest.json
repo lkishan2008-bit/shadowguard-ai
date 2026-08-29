@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "ShadowGuard AI - Privacy DLP",
+  "version": "1.0.0",
+  "description": "Privacy-First AI Data Loss Prevention Engine",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["activeTab", "storage"]
+}
