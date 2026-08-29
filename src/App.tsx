@@ -12,19 +12,65 @@ const CATEGORY_SEVERITY: Record<string, DetectionResult['severity']> = {
   EMAIL_ADDRESS: 'LOW',
 };
 
-const SEVERITY_PILL_CLASS: Record<DetectionResult['severity'], string> = {
-  CRITICAL: 'bg-red-950 text-red-400 border-red-700/70',
-  HIGH: 'bg-orange-950 text-orange-400 border-orange-700/70',
-  MEDIUM: 'bg-yellow-950 text-yellow-400 border-yellow-700/70',
-  LOW: 'bg-cyan-950 text-cyan-400 border-cyan-700/70',
-};
+// ─── Inline pill badge styling using token variables ─────────────────────────
+function getPillStyle(severity: DetectionResult['severity']) {
+  switch (severity) {
+    case 'CRITICAL':
+      return {
+        backgroundColor: 'rgba(224, 112, 112, 0.12)',
+        color: 'var(--danger)',
+        borderColor: 'rgba(224, 112, 112, 0.35)',
+      };
+    case 'HIGH':
+      return {
+        backgroundColor: 'rgba(212, 165, 116, 0.12)',
+        color: 'var(--warn)',
+        borderColor: 'rgba(212, 165, 116, 0.35)',
+      };
+    case 'MEDIUM':
+      return {
+        backgroundColor: 'rgba(212, 165, 116, 0.08)',
+        color: 'var(--warn)',
+        borderColor: 'rgba(212, 165, 116, 0.25)',
+      };
+    default:
+      return {
+        backgroundColor: 'rgba(125, 186, 158, 0.12)',
+        color: 'var(--ok)',
+        borderColor: 'rgba(125, 186, 158, 0.35)',
+      };
+  }
+}
 
-const SEVERITY_BADGE_CLASS: Record<DetectionResult['severity'], string> = {
-  CRITICAL: 'bg-red-900/40 text-red-300 border-red-700/60',
-  HIGH: 'bg-orange-900/40 text-orange-300 border-orange-700/60',
-  MEDIUM: 'bg-yellow-900/40 text-yellow-300 border-yellow-700/60',
-  LOW: 'bg-cyan-900/40 text-cyan-300 border-cyan-700/60',
-};
+// ─── Table badge styling using token variables ──────────────────────────────
+function getBadgeStyle(severity: DetectionResult['severity']) {
+  switch (severity) {
+    case 'CRITICAL':
+      return {
+        backgroundColor: 'rgba(224, 112, 112, 0.12)',
+        color: 'var(--danger)',
+        borderColor: 'rgba(224, 112, 112, 0.3)',
+      };
+    case 'HIGH':
+      return {
+        backgroundColor: 'rgba(212, 165, 116, 0.12)',
+        color: 'var(--warn)',
+        borderColor: 'rgba(212, 165, 116, 0.3)',
+      };
+    case 'MEDIUM':
+      return {
+        backgroundColor: 'rgba(212, 165, 116, 0.08)',
+        color: 'var(--warn)',
+        borderColor: 'rgba(212, 165, 116, 0.2)',
+      };
+    default:
+      return {
+        backgroundColor: 'rgba(125, 186, 158, 0.12)',
+        color: 'var(--ok)',
+        borderColor: 'rgba(125, 186, 158, 0.3)',
+      };
+  }
+}
 
 // ─── Parse sanitized text into text runs + styled pill badges ────────────────
 function renderSanitizedOutput(text: string) {
@@ -36,7 +82,11 @@ function renderSanitizedOutput(text: string) {
       return (
         <span
           key={i}
-          className={`inline-flex items-center px-1.5 py-0.5 rounded border font-mono text-xs mx-0.5 align-middle ${SEVERITY_PILL_CLASS[severity]}`}
+          style={{
+            ...getPillStyle(severity),
+            fontFamily: 'var(--font-mono)',
+          }}
+          className="inline-flex items-center px-2 py-0.5 rounded-md border text-xs mx-0.5 align-middle font-medium"
         >
           {part}
         </span>
@@ -90,55 +140,100 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen text-slate-100 font-sans"
-      style={{ background: 'radial-gradient(ellipse at top, #0a1f14 0%, #020617 65%)' }}
+      style={{
+        backgroundColor: 'var(--bg)',
+        color: 'var(--fg)',
+        fontFamily: 'var(--font-sans)',
+      }}
+      className="min-h-screen"
     >
-      {/* Top neon rule */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+      {/* Top accent rule */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, var(--border-strong) 50%, transparent 100%)',
+          height: '1px',
+        }}
+        className="w-full"
+      />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
 
         {/* ── Header ── */}
         <header className="mb-8 flex flex-wrap justify-between items-center gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <ShieldIcon className="w-6 h-6 text-emerald-400" />
-              <h1 className="text-2xl font-bold tracking-tight text-white">
-                ShadowGuard <span className="text-emerald-400">AI</span>
+            <div className="flex items-center gap-2.5 mb-1">
+              <ShieldIcon className="w-6 h-6 text-[var(--ok)]" />
+              <h1 className="text-2xl font-semibold tracking-tight text-[var(--fg)]">
+                ShadowGuard <span style={{ color: 'var(--ok)' }}>AI</span>
               </h1>
             </div>
-            <p className="text-sm text-slate-500 pl-8">
+            <p className="text-sm pl-8.5 text-[var(--muted)]">
               Privacy-First AI Data Loss Prevention Engine
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             {criticalCount > 0 && (
-              <span className="flex items-center gap-1.5 px-3 py-1 bg-red-950/60 text-red-400 border border-red-700/50 rounded-full text-xs font-semibold backdrop-blur-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+              <span
+                style={{
+                  backgroundColor: 'rgba(224, 112, 112, 0.12)',
+                  color: 'var(--danger)',
+                  borderColor: 'rgba(224, 112, 112, 0.35)',
+                  borderRadius: 'var(--radius)',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                className="flex items-center gap-1.5 px-3 py-1 border text-xs font-medium backdrop-blur-sm"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--danger)] animate-pulse" />
                 {criticalCount} CRITICAL
               </span>
             )}
-            <span className="flex items-center gap-1.5 px-3 py-1 bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 rounded-full text-xs font-semibold backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span
+              style={{
+                backgroundColor: 'rgba(125, 186, 158, 0.1)',
+                color: 'var(--ok)',
+                borderColor: 'rgba(125, 186, 158, 0.3)',
+                borderRadius: 'var(--radius)',
+                fontFamily: 'var(--font-sans)',
+              }}
+              className="flex items-center gap-1.5 px-3 py-1 border text-xs font-medium backdrop-blur-sm"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]" />
               India DLP Active
             </span>
           </div>
         </header>
 
         {/* ── Two-column panels ── */}
-        <main className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* Input Panel */}
-          <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 flex flex-col shadow-xl shadow-black/40 hover:border-slate-600/60 transition-colors duration-300">
+          <div
+            style={{
+              backgroundColor: 'var(--elevated)',
+              borderColor: 'var(--border)',
+              borderRadius: 'var(--radius)',
+            }}
+            className="border p-6 flex flex-col shadow-lg transition-colors duration-200"
+          >
             <div className="flex items-center justify-between mb-3">
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
+              <label
+                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
+                className="text-xs font-medium uppercase tracking-wider"
+              >
                 Raw Prompt Input
               </label>
               <button
                 id="clear-btn"
                 onClick={handleClear}
-                className="text-xs text-slate-600 hover:text-slate-300 transition-colors px-2 py-0.5 rounded border border-slate-700/60 hover:border-slate-500"
+                style={{
+                  color: 'var(--muted)',
+                  borderColor: 'var(--border)',
+                  backgroundColor: 'var(--subtle)',
+                  borderRadius: '8px',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                className="text-xs px-2.5 py-1 border transition-colors hover:text-[var(--fg)] hover:border-[var(--border-strong)]"
               >
                 Clear
               </button>
@@ -146,7 +241,14 @@ export default function App() {
 
             <textarea
               id="raw-prompt-input"
-              className="w-full flex-grow bg-slate-950/70 border border-slate-700/40 rounded-xl p-3 text-slate-200 text-sm focus:outline-none focus:border-emerald-500/50 font-mono resize-none min-h-[220px] placeholder-slate-700 transition-all duration-200"
+              style={{
+                backgroundColor: 'var(--bg)',
+                borderColor: 'var(--border)',
+                color: 'var(--fg)',
+                fontFamily: 'var(--font-mono)',
+                borderRadius: '12px',
+              }}
+              className="w-full flex-grow border p-3.5 text-sm focus:outline-none focus:border-[var(--border-strong)] resize-none min-h-[220px] placeholder-[var(--faint)] transition-all duration-200"
               placeholder="Paste prompt containing sensitive data (e.g., Aadhaar, PAN, AWS keys)..."
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
@@ -156,23 +258,47 @@ export default function App() {
               id="scan-btn"
               onClick={handleScan}
               disabled={!inputPrompt.trim()}
-              className="mt-4 w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-30 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-xl transition-all duration-200 text-sm shadow-lg shadow-emerald-950/50 hover:shadow-emerald-900/60"
+              style={{
+                backgroundColor: inputPrompt.trim() ? 'var(--accent)' : 'var(--subtle)',
+                color: inputPrompt.trim() ? 'var(--accent-fg)' : 'var(--faint)',
+                borderColor: 'var(--border)',
+                borderRadius: '12px',
+                fontFamily: 'var(--font-sans)',
+              }}
+              className="mt-4 w-full font-semibold py-2.5 border transition-all duration-200 text-sm disabled:cursor-not-allowed shadow-md"
             >
               Inspect &amp; Redact
             </button>
           </div>
 
           {/* Output Panel */}
-          <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 flex flex-col shadow-xl shadow-black/40 hover:border-slate-600/60 transition-colors duration-300">
+          <div
+            style={{
+              backgroundColor: 'var(--elevated)',
+              borderColor: 'var(--border)',
+              borderRadius: 'var(--radius)',
+            }}
+            className="border p-6 flex flex-col shadow-lg transition-colors duration-200"
+          >
             <div className="flex items-center justify-between mb-3">
-              <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
+              <label
+                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
+                className="text-xs font-medium uppercase tracking-wider"
+              >
                 Sanitized Output
               </label>
               <button
                 id="copy-btn"
                 onClick={handleCopy}
                 disabled={!sanitizedOutput}
-                className="text-xs text-slate-600 hover:text-emerald-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-2 py-0.5 rounded border border-slate-700/60 hover:border-emerald-700/50"
+                style={{
+                  color: sanitizedOutput ? (copied ? 'var(--ok)' : 'var(--fg)') : 'var(--faint)',
+                  borderColor: 'var(--border)',
+                  backgroundColor: 'var(--subtle)',
+                  borderRadius: '8px',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                className="text-xs px-2.5 py-1 border transition-colors disabled:cursor-not-allowed hover:border-[var(--border-strong)]"
               >
                 {copied ? '✓ Copied' : 'Copy'}
               </button>
@@ -180,14 +306,20 @@ export default function App() {
 
             <div
               id="sanitized-output"
-              className="w-full flex-grow bg-slate-950/70 border border-slate-700/40 rounded-xl p-3 text-sm font-mono overflow-auto min-h-[220px] leading-relaxed"
+              style={{
+                backgroundColor: 'var(--bg)',
+                borderColor: 'var(--border)',
+                fontFamily: 'var(--font-mono)',
+                borderRadius: '12px',
+              }}
+              className="w-full flex-grow border p-3.5 text-sm overflow-auto min-h-[220px] leading-relaxed"
             >
               {sanitizedOutput ? (
-                <span className="text-slate-300 whitespace-pre-wrap break-words">
+                <span style={{ color: 'var(--fg)' }} className="whitespace-pre-wrap break-words">
                   {renderSanitizedOutput(sanitizedOutput)}
                 </span>
               ) : (
-                <span className="text-slate-700 italic text-xs">
+                <span style={{ color: 'var(--faint)' }} className="italic text-xs">
                   Sanitized prompt will appear here after inspection…
                 </span>
               )}
@@ -195,54 +327,85 @@ export default function App() {
           </div>
 
           {/* ── Findings Table ── */}
-          <div className="md:col-span-2 bg-slate-900/80 backdrop-blur-md border border-slate-700/50 rounded-2xl p-5 shadow-xl shadow-black/40">
+          <div
+            style={{
+              backgroundColor: 'var(--elevated)',
+              borderColor: 'var(--border)',
+              borderRadius: 'var(--radius)',
+            }}
+            className="md:col-span-2 border p-6 shadow-lg"
+          >
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
+              <h2
+                style={{ color: 'var(--muted)', fontFamily: 'var(--font-sans)' }}
+                className="text-xs font-medium uppercase tracking-wider"
+              >
                 Detected Threats / PII
               </h2>
               <div className="flex items-center gap-3">
                 {findings.some((f) => f.severity === 'CRITICAL' || f.severity === 'HIGH') && (
-                  <span className="flex items-center gap-1.5 text-red-400 text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                  <span style={{ color: 'var(--danger)' }} className="flex items-center gap-1.5 text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--danger)] animate-pulse" />
                     Active threats
                   </span>
                 )}
-                <span className="bg-slate-800/70 text-slate-400 border border-slate-700/50 px-2.5 py-0.5 rounded text-xs">
+                <span
+                  style={{
+                    backgroundColor: 'var(--subtle)',
+                    color: 'var(--muted)',
+                    borderColor: 'var(--border)',
+                    borderRadius: '8px',
+                    fontFamily: 'var(--font-mono)',
+                  }}
+                  className="border px-2.5 py-0.5 text-xs font-medium"
+                >
                   {findings.length} findings
                 </span>
               </div>
             </div>
 
             {findings.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-slate-700">
-                <ShieldIcon className="w-10 h-10 mb-3 opacity-20" />
-                <p className="text-xs italic">
+              <div className="flex flex-col items-center justify-center py-10" style={{ color: 'var(--faint)' }}>
+                <ShieldIcon className="w-10 h-10 mb-3 opacity-25" />
+                <p className="text-xs italic" style={{ fontFamily: 'var(--font-sans)' }}>
                   No sensitive data detected. Enter text above and click Inspect.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
+                <table className="w-full text-left text-xs" style={{ color: 'var(--fg)' }}>
                   <thead>
-                    <tr className="text-[10px] font-semibold text-slate-600 uppercase tracking-widest border-b border-slate-800/60">
-                      <th className="pb-2.5 px-3">Category</th>
-                      <th className="pb-2.5 px-3">Severity</th>
-                      <th className="pb-2.5 px-3">Matched Value</th>
-                      <th className="pb-2.5 px-3 text-right">Offset</th>
+                    <tr
+                      style={{
+                        borderColor: 'var(--border)',
+                        color: 'var(--muted)',
+                        fontFamily: 'var(--font-sans)',
+                      }}
+                      className="text-[11px] font-medium uppercase tracking-wider border-b"
+                    >
+                      <th className="pb-3 px-3">Category</th>
+                      <th className="pb-3 px-3">Severity</th>
+                      <th className="pb-3 px-3">Matched Value</th>
+                      <th className="pb-3 px-3 text-right">Offset</th>
                     </tr>
                   </thead>
                   <tbody>
                     {findings.map((item, idx) => (
                       <tr
                         key={idx}
-                        className="border-b border-slate-800/40 hover:bg-slate-800/25 transition-colors duration-150"
+                        style={{ borderColor: 'var(--border)' }}
+                        className="border-b transition-colors duration-150 hover:bg-[var(--subtle)]"
                       >
-                        <td className="py-3 px-3 font-mono text-emerald-400">
+                        <td
+                          style={{ color: 'var(--ok)', fontFamily: 'var(--font-mono)' }}
+                          className="py-3 px-3 font-medium"
+                        >
                           {item.category}
                         </td>
                         <td className="py-3 px-3">
                           <span
-                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded border text-[10px] font-bold ${SEVERITY_BADGE_CLASS[item.severity]}`}
+                            style={getBadgeStyle(item.severity)}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-[11px] font-semibold"
                           >
                             {(item.severity === 'CRITICAL' || item.severity === 'HIGH') && (
                               <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
@@ -250,10 +413,13 @@ export default function App() {
                             {item.severity}
                           </span>
                         </td>
-                        <td className="py-3 px-3 font-mono text-slate-300">
+                        <td style={{ fontFamily: 'var(--font-mono)' }} className="py-3 px-3">
                           {item.match}
                         </td>
-                        <td className="py-3 px-3 text-right font-mono text-slate-600 text-[10px]">
+                        <td
+                          style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}
+                          className="py-3 px-3 text-right text-[11px]"
+                        >
                           {item.start}–{item.end}
                         </td>
                       </tr>
@@ -266,13 +432,22 @@ export default function App() {
         </main>
 
         {/* ── Footer ── */}
-        <footer className="mt-8 text-center text-slate-700 text-xs">
+        <footer
+          style={{ color: 'var(--faint)', fontFamily: 'var(--font-sans)' }}
+          className="mt-8 text-center text-xs"
+        >
           ShadowGuard AI &middot; India DLP Engine &middot; {new Date().getFullYear()}
         </footer>
       </div>
 
-      {/* Bottom neon rule */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+      {/* Bottom accent rule */}
+      <div
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, var(--border) 50%, transparent 100%)',
+          height: '1px',
+        }}
+        className="w-full"
+      />
     </div>
   );
 }
