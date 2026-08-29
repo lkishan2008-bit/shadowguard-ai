@@ -1,47 +1,68 @@
+// src/detection/india-rules.ts
+
 export interface DetectionResult {
   category: string;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  match: string;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  matchedText: string;
   start: number;
   end: number;
 }
 
-const PATTERNS = {
-  AWS_KEY: /\b(AKIA|ASIA)[0-9A-Z]{16}\b/g,
-  AADHAAR: /\b[2-9]\d{3}\s?\d{4}\s?\d{4}\b/g,
-  PAN: /\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/g,
-  GSTIN: /\b[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}\b/g,
-  INDIAN_PHONE: /\b(?:\+91[\-\s]?)?[6-9]\d{9}\b/g,
-  EMAIL: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g,
-};
-
 export function detectSensitiveData(text: string): DetectionResult[] {
   const results: DetectionResult[] = [];
 
-  const check = (
-    pattern: RegExp,
-    category: string,
-    severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
-  ) => {
-    let match;
-    const regex = new RegExp(pattern);
-    while ((match = regex.exec(text)) !== null) {
-      results.push({
-        category,
-        severity,
-        match: match[0],
-        start: match.index,
-        end: match.index + match[0].length,
-      });
+  const patterns = [
+    {
+      category: 'AWS_ACCESS_KEY',
+      severity: 'CRITICAL' as const,
+      regex: /AKIA[0-9A-Z]{16}/g
+    },
+    {
+      category: 'PAN_NUMBER',
+      severity: 'HIGH' as const,
+      regex: /[A-Z]{5}[0-9]{4}[A-Z]{1}/g
+    },
+    {
+      category: 'PHONE_NUMBER',
+      severity: 'MEDIUM' as const,
+      regex: /(\+91[\-\s]?)?[6-9]\d{9}/g
+    },
+    {
+      category: 'AADHAAR_NUMBER',
+      severity: 'HIGH' as const,
+      // Matches 12 digits separated by spaces/dashes (e.g. 1234 5678 9012)
+      regex: /\b[2-9]{1}\d{3}[\s\-]?\d{4}[\s\-]?\d{4}\b/g
+    },
+    {
+      category: 'EMAIL_ADDRESS',
+      severity: 'LOW' as const,
+      regex: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g
     }
-  };
+  ];
 
-  check(PATTERNS.AWS_KEY, 'AWS_ACCESS_KEY', 'CRITICAL');
-  check(PATTERNS.AADHAAR, 'AADHAAR_NUMBER', 'HIGH');
-  check(PATTERNS.PAN, 'PAN_NUMBER', 'HIGH');
-  check(PATTERNS.GSTIN, 'GSTIN', 'MEDIUM');
-  check(PATTERNS.INDIAN_PHONE, 'PHONE_NUMBER', 'MEDIUM');
-  check(PATTERNS.EMAIL, 'EMAIL_ADDRESS', 'LOW');
+  // Track matched ranges to prevent overlap/double-tagging
+  const matchedRanges: [number, number][] = [];
 
-  return results;
+  for (const item of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = item.regex.exec(text)) !== null) {
+      const start = match.index;
+      const end = start + match[0].length;
+
+      const overlaps = matchedRanges.some(([rStart, rEnd]) => start < rEnd && end > rStart);
+
+      if (!overlaps) {
+        matchedRanges.push([start, end]);
+        results.push({
+          category: item.category,
+          severity: item.severity,
+          matchedText: match[0],
+          start,
+          end
+        });
+      }
+    }
+  }
+
+  return results.sort((a, b) => a.start - b.start);
 }
