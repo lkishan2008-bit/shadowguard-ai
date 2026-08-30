@@ -37,7 +37,7 @@ export default function App() {
 
   // Core Data State
   const [incidents, setIncidents] = useState<SecurityIncident[]>(INITIAL_INCIDENTS);
-  const [employees] = useState<EmployeeSecurityProfile[]>(INITIAL_EMPLOYEES);
+  const [employees, setEmployees] = useState<EmployeeSecurityProfile[]>(INITIAL_EMPLOYEES);
   const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
 
@@ -106,6 +106,40 @@ export default function App() {
     };
 
     loadPolicies();
+  }, []);
+
+  useEffect(() => {
+    const loadEmployees = async () => {
+      const { data, error } = await supabase
+        .from('employees')
+        .select('*');
+
+      if (error) {
+        console.error('[ShadowGuard] Failed to load employees:', error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const mappedEmployees: EmployeeSecurityProfile[] = data.map((row) => ({
+          id: row.id,
+          name: row.name,
+          email: row.email,
+          department: row.department,
+          aiRequests: row.ai_requests,
+          incidentCount: row.incident_count,
+          riskScore: row.risk_score,
+          riskTier: row.risk_tier,
+          status: row.status,
+          servicesUsed: row.services_used ?? [],
+          frequentThreats: row.frequent_threats ?? [],
+          lastActive: row.last_active ?? '',
+        }));
+
+        setEmployees(mappedEmployees);
+      }
+    };
+
+    loadEmployees();
   }, []);
 
   // Modal / Drawer Selection State
