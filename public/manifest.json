@@ -2,19 +2,27 @@
   "manifest_version": 3,
   "name": "ShadowGuard AI - Privacy DLP",
   "version": "1.0.0",
-  "description": "Privacy-First AI Data Loss Prevention Engine",
+  "description": "Enterprise AI Security & Data Loss Prevention for LLMs",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": "icon.png"
   },
-  "permissions": ["activeTab", "storage"],
   "content_scripts": [
     {
       "matches": [
         "https://chatgpt.com/*",
-        "https://gemini.google.com/*",
-        "https://claude.ai/*"
+        "https://claude.ai/*",
+        "https://*.openai.com/*"
       ],
       "js": ["content.js"]
     }
+  ],
+  "host_permissions": [
+    "https://*.supabase.co/*"
   ]
 }
