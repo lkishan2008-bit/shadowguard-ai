@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Bell,
   ChevronDown,
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { NavTab } from './Sidebar';
 import type { SecurityIncident } from '../../types';
+import { supabase } from '../../lib/supabase';
 
 interface HeaderProps {
   activeTab: NavTab;
@@ -46,11 +47,25 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>(userEmail || '');
+
+  useEffect(() => {
+    if (userEmail) {
+      setCurrentUserEmail(userEmail);
+    } else {
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user?.email) {
+          setCurrentUserEmail(user.email);
+        }
+      });
+    }
+  }, [userEmail]);
+
   const info = TAB_TITLES[activeTab] || TAB_TITLES.overview;
 
   const recentUnresolved = incidents.slice(0, 4);
-  const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : 'A';
-  const displayEmail = userEmail || 'admin@enterprise.com';
+  const userInitial = currentUserEmail ? currentUserEmail.charAt(0).toUpperCase() : 'A';
+  const displayEmail = currentUserEmail || 'admin@enterprise.com';
 
   return (
     <header
