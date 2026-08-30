@@ -3,7 +3,6 @@ import type { Session } from '@supabase/supabase-js';
 import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
-import { Login } from './components/auth/Login';
 import { OverviewView } from './components/dashboard/OverviewView';
 import { IncidentsView } from './components/incidents/IncidentsView';
 import { IncidentDrawer } from './components/incidents/IncidentDrawer';
@@ -35,7 +34,6 @@ import { ShieldAlert, X } from 'lucide-react';
 export default function App() {
   // Auth State
   const [session, setSession] = useState<Session | null>(null);
-  const [authLoading, setAuthLoading] = useState<boolean>(true);
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
@@ -51,14 +49,12 @@ export default function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setAuthLoading(false);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setAuthLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -299,21 +295,6 @@ export default function App() {
     }
   };
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#f9f9f8] flex flex-col items-center justify-center text-[#70706c] select-none">
-        <div className="flex items-center gap-3 bg-white border border-[#e5e5e2] px-6 py-4 rounded-2xl shadow-sm">
-          <div className="w-5 h-5 border-2 border-[#84cc16] border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-semibold text-[#111110]">Verifying Security Credentials...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return <Login />;
-  }
-
   return (
     <div
       style={{
@@ -414,7 +395,7 @@ export default function App() {
             onOpenExtensionModal={() => setIsExtensionModalOpen(true)}
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
-            userEmail={session.user.email}
+            userEmail={session?.user?.email}
             onLogout={handleLogout}
           />
 
