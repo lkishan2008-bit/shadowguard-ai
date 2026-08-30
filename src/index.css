@@ -66,3 +66,9 @@ button, [role="button"] {
   .sidebar { width: 100%; }
   .main-content { width: 100%; min-width: 0; }
 }
+
+@media (min-width: 769px) {
+  .main-content-offset {
+    padding-left: 250px !important;
+  }
+}

@@ -131,7 +131,12 @@ export default function App() {
         matched_text: item.matchedText,
         redacted_count: 1,
       }));
-      await supabase.from('pii_logs').insert(logsToInsert);
+      try {
+        const { error } = await supabase.from('pii_logs').insert(logsToInsert);
+        if (error) console.error('[ShadowGuard] pii_logs insert error:', error.message);
+      } catch (err) {
+        console.error('[ShadowGuard] Supabase unreachable:', err);
+      }
     }
   };
 
@@ -225,7 +230,7 @@ export default function App() {
         />
 
         {/* Right Main Container (Header + Content Area) */}
-        <div className="flex-1 flex flex-col md:pl-[250px] min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 main-content-offset">
           {/* Top Sticky Header */}
           <Header
             activeTab={activeTab}
