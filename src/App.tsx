@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -40,6 +40,43 @@ export default function App() {
   const [employees] = useState<EmployeeSecurityProfile[]>(INITIAL_EMPLOYEES);
   const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
+
+  useEffect(() => {
+    const loadIncidents = async () => {
+      const { data, error } = await supabase
+        .from('incidents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('[ShadowGuard] Failed to load incidents:', error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const mappedIncidents: SecurityIncident[] = data.map((row) => ({
+          id: row.id,
+          employeeName: row.employee_name,
+          employeeEmail: row.employee_email,
+          employeeDepartment: row.employee_department,
+          aiService: row.ai_service,
+          detectedCategories: row.detected_categories,
+          severity: row.severity,
+          riskScore: row.risk_score,
+          action: row.action,
+          timestamp: row.timestamp,
+          rawTextPreview: row.raw_text_preview ?? '',
+          sanitizedPreview: row.sanitized_preview ?? '',
+          policyTriggered: row.policy_triggered ?? '',
+          status: row.status,
+        }));
+
+        setIncidents(mappedIncidents);
+      }
+    };
+
+    loadIncidents();
+  }, []);
 
   // Modal / Drawer Selection State
   const [selectedIncident, setSelectedIncident] = useState<SecurityIncident | null>(null);
