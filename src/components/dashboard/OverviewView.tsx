@@ -85,7 +85,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       </div>
 
       {/* ── 4 Compact Security Metric Cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
         {/* Card 1: AI Requests */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
@@ -362,7 +362,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={RISK_ACTIVITY_7DAYS} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={RISK_ACTIVITY_7DAYS} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id="requestsGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
