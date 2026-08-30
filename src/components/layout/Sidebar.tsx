@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'overview' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'overview' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <LayoutDashboard
               className={`w-4 h-4 ${activeTab === 'overview' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -95,7 +95,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'incidents' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'incidents' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center justify-between px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <div className="flex items-center gap-3">
               <ShieldAlert
@@ -121,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'employees' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'employees' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <Users
               className={`w-4 h-4 ${activeTab === 'employees' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -136,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'services' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'services' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <Brain
               className={`w-4 h-4 ${activeTab === 'services' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -158,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'demo' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'demo' ? '3px solid #22D3EE' : '3px solid transparent',
             }}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left group"
+            className="w-full flex items-center justify-between px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left group"
           >
             <div className="flex items-center gap-3">
               <Sparkles className="w-4 h-4 text-cyan-400 group-hover:animate-pulse" />
@@ -176,7 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'architecture' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'architecture' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <Flag
               className={`w-4 h-4 ${activeTab === 'architecture' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -187,7 +187,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        {/* Group: Configuration */}
+        {/* Group: Governance & Settings */}
         <div className="space-y-1">
           <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 px-3 mb-2">
             Governance &amp; Settings
@@ -200,7 +200,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'policies' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'policies' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <SlidersHorizontal
               className={`w-4 h-4 ${activeTab === 'policies' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -215,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color: activeTab === 'settings' ? '#F8FAFC' : '#94A3B8',
               borderLeft: activeTab === 'settings' ? '3px solid #3B82F6' : '3px solid transparent',
             }}
-            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium transition-all hover:text-white hover:bg-slate-800/40 text-left"
+            className="w-full flex items-center gap-3 px-3 py-2 rounded-r-lg text-xs font-medium tracking-wide transition-all hover:text-white hover:bg-slate-800/40 text-left"
           >
             <Settings
               className={`w-4 h-4 ${activeTab === 'settings' ? 'text-blue-400' : 'text-slate-400'}`}
@@ -243,7 +243,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <span className="text-[10px] text-slate-500 font-mono">v1.0.0</span>
         </div>
 
-        <div className="flex items-center gap-2.5 pt-1">
+        <div className="flex items-center gap-2.5 pt-1 px-2 py-1.5 -mx-2 rounded-lg transition-colors duration-150 hover:bg-white/[0.04] cursor-pointer">
           <div className="w-7 h-7 rounded-full bg-blue-600/20 border border-blue-500/40 text-blue-300 font-bold flex items-center justify-center text-xs">
             DC
           </div>
