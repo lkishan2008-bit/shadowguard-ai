@@ -78,6 +78,36 @@ export default function App() {
     loadIncidents();
   }, []);
 
+  useEffect(() => {
+    const loadPolicies = async () => {
+      const { data, error } = await supabase
+        .from('security_policies')
+        .select('*');
+
+      if (error) {
+        console.error('[ShadowGuard] Failed to load policies:', error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const mappedPolicies: SecurityPolicyRule[] = data.map((row) => ({
+          id: row.id,
+          name: row.name,
+          category: row.category,
+          severity: row.severity,
+          action: row.action,
+          description: row.description,
+          isIndiaDlp: row.is_india_dlp ?? false,
+          enabled: row.enabled,
+        }));
+
+        setPolicies(mappedPolicies);
+      }
+    };
+
+    loadPolicies();
+  }, []);
+
   // Modal / Drawer Selection State
   const [selectedIncident, setSelectedIncident] = useState<SecurityIncident | null>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeSecurityProfile | null>(null);
