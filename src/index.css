@@ -2,12 +2,12 @@
 @import "tailwindcss";
 
 :root {
-  --bg-main: #f8f8f6;         /* Very subtle, soft off-white (just a tiny hint of warmth, not too dark) */
-  --bg-sidebar: #f0f0ec;      /* Soft subtle contrast for the sidebar */
-  --bg-card: #ffffff;         /* Crisp clean white cards */
-  --border-color: #e6e6e0;    /* Soft, elegant borders */
-  --text-primary: #111110;    /* Deep near-black */
-  --text-secondary: #666660;  /* Muted gray */
+  --bg-main: #0f172a;         /* Deep dark navy background */
+  --bg-sidebar: #1e293b;      /* Slightly lighter navy for sidebar */
+  --bg-card: #1e293b;         /* Dark card background */
+  --border-color: #334155;    /* Subtle dark border */
+  --text-primary: #f8fafc;    /* Bright clean white text */
+  --text-secondary: #94a3b8;  /* Muted slate gray */
   --accent-lime: #b6f542;     /* Vibrant lime highlight */
 
   /* Theme Mapping */
@@ -16,7 +16,7 @@
   --sidebar: var(--bg-sidebar);
   --card: var(--bg-card);
   --cards: var(--bg-card);
-  --card-hover: #f5f5f3;
+  --card-hover: #334155;
 
   --primary: #84cc16;
   --primary-bright: #a3e635;
@@ -24,7 +24,7 @@
 
   --main-text: var(--text-primary);
   --secondary-text: var(--text-secondary);
-  --muted-text: #8c8c87;
+  --muted-text: #64748b;
 
   --border: var(--border-color);
   --success: #10b981;
