@@ -142,6 +142,36 @@ export default function App() {
     loadEmployees();
   }, []);
 
+    // Load AI Services from Supabase
+  useEffect(() => {
+    const loadAI = async () => {
+      const { data, error } = await supabase
+        .from('ai_service_configs')
+        .select('*');
+
+      if (error) {
+        console.error('[ShadowGuard] Failed to load AI services:', error.message);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const mappedAI: AIServiceConfig[] = data.map((row) => ({
+          id: row.id,
+          name: row.name,
+          status: row.status,
+          requests: row.requests,
+          incidents: row.incidents,
+          riskTier: row.risk_tier,
+          defaultAction: row.default_action,
+          lastUsed: row.last_used,
+          iconType: row.icon_type,
+        }));
+        setAiServices(mappedAI);
+      }
+    };
+    loadAI();
+  }, []);
+
   // Modal / Drawer Selection State
   const [selectedIncident, setSelectedIncident] = useState<SecurityIncident | null>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeSecurityProfile | null>(null);
