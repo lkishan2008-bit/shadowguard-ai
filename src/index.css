@@ -2,13 +2,13 @@
 @import "tailwindcss";
 
 :root {
-  --bg-main: #f9f9f8;         /* Warm clean off-white background */
-  --bg-sidebar: #f3f3f1;      /* Slightly darker cream for sidebar */
-  --bg-card: #ffffff;         /* Pure white for cards */
-  --border-color: #e5e5e2;    /* Soft subtle border */
-  --text-primary: #111110;    /* Deep near-black for high readability */
-  --text-secondary: #70706c;  /* Muted gray-brown for subtitles */
-  --accent-lime: #b6f542;     /* The bright chart/accent green */
+  --bg-main: #f8f8f6;         /* Very subtle, soft off-white (just a tiny hint of warmth, not too dark) */
+  --bg-sidebar: #f0f0ec;      /* Soft subtle contrast for the sidebar */
+  --bg-card: #ffffff;         /* Crisp clean white cards */
+  --border-color: #e6e6e0;    /* Soft, elegant borders */
+  --text-primary: #111110;    /* Deep near-black */
+  --text-secondary: #666660;  /* Muted gray */
+  --accent-lime: #b6f542;     /* Vibrant lime highlight */
 
   /* Theme Mapping */
   --bg: var(--bg-main);
