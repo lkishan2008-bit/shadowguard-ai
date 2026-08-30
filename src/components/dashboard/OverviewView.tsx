@@ -183,11 +183,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       </div>
 
       {/* ── Security Posture Section ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-5">
         {/* Overall Risk Score Card */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="lg:col-span-2 p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="xl:col-span-2 p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
@@ -280,7 +280,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Protection Status Card */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
         >
           <div className="border-b border-slate-800 pb-3">
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -340,7 +340,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       {/* ── Risk Activity Chart ── */}
       <div
         style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-        className="p-6 rounded-xl border shadow-lg"
+        className="p-5 sm:p-6 rounded-xl border shadow-lg"
       >
         <div className="flex flex-wrap items-center justify-between gap-2 mb-6 border-b border-slate-800 pb-3">
           <div>
@@ -408,11 +408,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       </div>
 
       {/* ── AI Service Usage & Threat Categories ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
         {/* Left: AI Service Usage */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
@@ -464,7 +464,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Right: Threat Categories Distribution */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
         >
           <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
@@ -498,7 +498,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       {/* ── Recent Security Incidents Table ── */}
       <div
         style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-        className="p-6 rounded-xl border shadow-lg"
+        className="p-5 sm:p-6 rounded-xl border shadow-lg"
       >
         <div className="flex items-center justify-between mb-5 border-b border-slate-800 pb-3">
           <div>

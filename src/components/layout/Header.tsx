@@ -51,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
         borderColor: 'var(--border)',
         height: '64px',
       }}
-      className="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 border-b"
+      className="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b"
     >
       {/* ── Left: Mobile Toggle & Breadcrumbs ── */}
       <div className="flex items-center gap-3">
