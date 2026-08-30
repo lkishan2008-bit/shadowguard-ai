@@ -49,26 +49,26 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const recentIncidents = incidents.slice(0, 5);
 
   return (
-    <div className="space-y-6 pb-12 text-left">
-      {/* ── Top Greeting & Quick Actions ── */}
+    <div className="space-y-8 pb-12 text-left w-full">
+      {/* ── Page Title / Hero Introduction Area ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-[28px] font-bold text-white tracking-tight leading-tight">
             Good evening, Admin
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-400 mt-1.5 leading-relaxed">
             Monitor your organization's AI security posture and real-time DLP enforcement.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
           <button
             onClick={onOpenCreatePolicy}
             style={{
-              backgroundColor: '#111827',
+              backgroundColor: 'var(--cards)',
               borderColor: 'var(--border)',
             }}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800 transition-colors shadow-sm whitespace-nowrap"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-semibold text-slate-200 hover:text-white hover:bg-[#162238] transition-colors shadow-sm whitespace-nowrap"
           >
             <Plus className="w-4 h-4 text-blue-400" />
             <span>Create Policy</span>
@@ -76,7 +76,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
           <button
             onClick={() => onSelectTab('demo')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-950/60 active:scale-[0.99] whitespace-nowrap"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-semibold text-xs transition-all shadow-md shadow-blue-950/60 active:scale-[0.99] whitespace-nowrap"
           >
             <Sparkles className="w-4 h-4 text-white" />
             <span>Launch Live DLP Demo</span>
@@ -84,12 +84,12 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         </div>
       </div>
 
-      {/* ── 4 Compact Security Metric Cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
+      {/* ── 4 Metric Cards (Clean 4-Column Desktop Grid) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         {/* Card 1: AI Requests */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-4 sm:p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
+          className="p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -99,9 +99,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <Brain className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">1,284</div>
-            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1 text-xs">
+          <div className="mt-4">
+            <div className="text-[28px] font-bold text-white tracking-tight leading-none">
+              1,284
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5 mt-2 text-xs">
               <span className="text-emerald-400 font-semibold flex items-center gap-0.5">
                 <TrendingUp className="w-3.5 h-3.5" /> +12.4%
               </span>
@@ -113,7 +115,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Card 2: Threats Detected */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-4 sm:p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
+          className="p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -123,11 +125,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <ShieldAlert className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <div className="mt-4">
+            <div className="text-[28px] font-bold text-white tracking-tight leading-none">
               {totalDetections}
             </div>
-            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1 text-xs">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2 text-xs">
               <span className="text-orange-400 font-semibold">+8 today</span>
               <span className="text-slate-400">across 4 AI tools</span>
             </div>
@@ -137,7 +139,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Card 3: Critical Incidents */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-4 sm:p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
+          className="p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -147,11 +149,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-bold text-red-400 tracking-tight">
+          <div className="mt-4">
+            <div className="text-[28px] font-bold text-red-400 tracking-tight leading-none">
               {criticalCount}
             </div>
-            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1 text-xs">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2 text-xs">
               <span className="text-red-400 font-semibold">Requires attention</span>
               <span className="text-slate-400">&middot; Blocked</span>
             </div>
@@ -161,7 +163,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Card 4: Data Redacted */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-4 sm:p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
+          className="p-5 rounded-xl border flex flex-col justify-between shadow-lg hover:border-slate-700 transition-colors min-w-0"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
@@ -171,198 +173,222 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <div className="mt-4">
+            <div className="text-[28px] font-bold text-white tracking-tight leading-none">
               {totalRedacted}
             </div>
-            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1 text-xs">
+            <div className="flex flex-wrap items-center gap-1.5 mt-2 text-xs">
               <span className="text-emerald-400 font-semibold">Protected automatically</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Security Posture Section ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
-        {/* Overall Risk Score Card */}
-        <div
-          style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="lg:col-span-7 xl:col-span-8 p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
-        >
-          <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-            <div>
-              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                Security Posture
-              </span>
-              <h3 className="text-base font-bold text-white">Overall AI Risk Score</h3>
-            </div>
-            <span className="px-2.5 py-0.5 rounded-full bg-orange-950/80 text-orange-400 border border-orange-800 text-xs font-bold shrink-0">
-              HIGH RISK
+      {/* ── Security Posture (Two-Card Composition) ── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              Security Posture
             </span>
+            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              Overall Security Overview
+            </h3>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 items-center">
-            {/* Radial score gauge representation */}
-            <div className="flex items-center gap-4 sm:gap-5">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 flex items-center justify-center">
-                <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                  {/* Background Track */}
-                  <path
-                    className="text-slate-800"
-                    strokeWidth="3.5"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  {/* Active Progress */}
-                  <path
-                    className="text-orange-500"
-                    strokeDasharray="72, 100"
-                    strokeLinecap="round"
-                    strokeWidth="3.5"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="absolute flex flex-col items-center justify-center text-center">
-                  <span className="text-2xl font-black text-white leading-none">72</span>
-                  <span className="text-[10px] text-slate-400 font-semibold mt-0.5">/ 100</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Left Primary Card: Overall AI Risk Score (60-66% width) */}
+          <div
+            style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
+            className="lg:col-span-7 xl:col-span-8 p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
+          >
+            <div className="flex items-center justify-between mb-5 border-b border-slate-800 pb-3">
+              <div className="text-sm font-bold text-white">
+                Overall AI Risk Score
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-orange-950/80 text-orange-400 border border-orange-800 text-xs font-bold shrink-0">
+                HIGH RISK
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center flex-1">
+              {/* Radial Score Gauge */}
+              <div className="sm:col-span-6 flex items-center gap-4">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 flex items-center justify-center">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                    {/* Background Track */}
+                    <path
+                      className="text-slate-800"
+                      strokeWidth="3.5"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                    {/* Active Progress */}
+                    <path
+                      className="text-orange-500"
+                      strokeDasharray="72, 100"
+                      strokeLinecap="round"
+                      strokeWidth="3.5"
+                      stroke="currentColor"
+                      fill="none"
+                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center justify-center text-center">
+                    <span className="text-2xl font-bold text-white leading-none">72</span>
+                    <span className="text-[10px] text-slate-400 font-semibold mt-0.5">/ 100</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1 text-left min-w-0">
+                  <div className="text-sm font-semibold text-white">Organization Risk Tier</div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Composite score computed from credential frequency, India PII leakage, and AI destinations.
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-1 text-left min-w-0">
-                <div className="text-sm font-bold text-white">Organization Risk Tier</div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Composite score computed from credential frequency, India PII leakage, and AI destinations.
-                </p>
-              </div>
-            </div>
+              {/* Breakdown Bars */}
+              <div className="sm:col-span-6 space-y-3 text-xs">
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="flex items-center gap-1.5 text-slate-300 truncate">
+                      <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                      Critical Threats
+                    </span>
+                    <span className="font-mono text-red-400 font-bold shrink-0">{criticalCount} incidents</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-red-500 rounded-full" style={{ width: '18%' }} />
+                  </div>
+                </div>
 
-            {/* Breakdown Bars */}
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center justify-between gap-2">
-                <span className="flex items-center gap-1.5 text-slate-300 truncate">
-                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
-                  Critical Threats
-                </span>
-                <span className="font-mono text-red-400 font-bold shrink-0">{criticalCount} incidents</span>
-              </div>
-              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-red-500 rounded-full" style={{ width: '18%' }} />
-              </div>
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="flex items-center gap-1.5 text-slate-300 truncate">
+                      <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0" />
+                      High Sensitivity (Aadhaar / PII)
+                    </span>
+                    <span className="font-mono text-orange-400 font-bold shrink-0">{highCount} incidents</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-orange-500 rounded-full" style={{ width: '42%' }} />
+                  </div>
+                </div>
 
-              <div className="flex items-center justify-between gap-2 pt-1">
-                <span className="flex items-center gap-1.5 text-slate-300 truncate">
-                  <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0" />
-                  High Sensitivity (Aadhaar / PII)
-                </span>
-                <span className="font-mono text-orange-400 font-bold shrink-0">{highCount} incidents</span>
-              </div>
-              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-orange-500 rounded-full" style={{ width: '42%' }} />
-              </div>
-
-              <div className="flex items-center justify-between gap-2 pt-1">
-                <span className="flex items-center gap-1.5 text-slate-300 truncate">
-                  <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                  Medium Risk (PAN / GST / Phone)
-                </span>
-                <span className="font-mono text-amber-400 font-bold shrink-0">{mediumCount} incidents</span>
-              </div>
-              <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-amber-500 rounded-full" style={{ width: '60%' }} />
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="flex items-center gap-1.5 text-slate-300 truncate">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                      Medium Risk (PAN / GST / Phone)
+                    </span>
+                    <span className="font-mono text-amber-400 font-bold shrink-0">{mediumCount} incidents</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-amber-500 rounded-full" style={{ width: '60%' }} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Protection Status Card */}
-        <div
-          style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="lg:col-span-5 xl:col-span-4 p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
-        >
-          <div className="border-b border-slate-800 pb-3">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-              Enforcement Engines
-            </span>
-            <h3 className="text-base font-bold text-white">Protection Status</h3>
-          </div>
-
-          <div className="space-y-3.5 my-3">
-            <div className="flex items-center justify-between text-xs gap-2">
-              <span className="text-slate-300 flex items-center gap-2 truncate">
-                <Lock className="w-3.5 h-3.5 text-blue-400 shrink-0" /> Browser Protection
-              </span>
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-xs gap-2">
-              <span className="text-slate-300 flex items-center gap-2 truncate">
-                <Brain className="w-3.5 h-3.5 text-cyan-400 shrink-0" /> AI Monitoring
-              </span>
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-xs gap-2">
-              <span className="text-slate-300 flex items-center gap-2 truncate">
-                <Flag className="w-3.5 h-3.5 text-emerald-400 shrink-0" /> 🇮🇳 India DLP Engine
-              </span>
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
-              </span>
-            </div>
-
-            <div className="flex items-center justify-between text-xs gap-2">
-              <span className="text-slate-300 flex items-center gap-2 truncate">
-                <Database className="w-3.5 h-3.5 text-purple-400 shrink-0" /> Zero-Data Logging
-              </span>
-              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ENFORCED
-              </span>
-            </div>
-          </div>
-
-          <button
-            onClick={() => onSelectTab('architecture')}
-            className="w-full py-2 px-3 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors flex items-center justify-center gap-1.5 mt-2"
+          {/* Right Card: Protection Status (35-40% width) */}
+          <div
+            style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
+            className="lg:col-span-5 xl:col-span-4 p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
           >
-            <span>Inspect Architecture Details</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+            <div>
+              <div className="border-b border-slate-800 pb-3 mb-4">
+                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                  Enforcement Engines
+                </span>
+                <h4 className="text-sm font-bold text-white">Protection Status</h4>
+              </div>
+
+              <div className="space-y-3.5">
+                <div className="flex items-center justify-between text-xs gap-3">
+                  <span className="text-slate-300 flex items-center gap-2.5 truncate">
+                    <Lock className="w-4 h-4 text-blue-400 shrink-0" />
+                    <span>Browser Protection</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs gap-3">
+                  <span className="text-slate-300 flex items-center gap-2.5 truncate">
+                    <Brain className="w-4 h-4 text-cyan-400 shrink-0" />
+                    <span>AI Monitoring</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs gap-3">
+                  <span className="text-slate-300 flex items-center gap-2.5 truncate">
+                    <Flag className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>🇮🇳 India DLP Engine</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ACTIVE
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-xs gap-3">
+                  <span className="text-slate-300 flex items-center gap-2.5 truncate">
+                    <Database className="w-4 h-4 text-purple-400 shrink-0" />
+                    <span>Zero-Data Logging</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono text-[11px] shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> ENFORCED
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onSelectTab('architecture')}
+              className="w-full py-2.5 px-3 rounded-lg bg-slate-800/60 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-white transition-colors flex items-center justify-center gap-1.5 mt-5"
+            >
+              <span>Inspect Architecture Details</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ── Risk Activity Chart ── */}
+      {/* ── Telemetry Section (Chart) ── */}
       <div
         style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-        className="p-5 sm:p-6 rounded-xl border shadow-lg"
+        className="p-6 rounded-xl border shadow-lg"
       >
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-6 border-b border-slate-800 pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 border-b border-slate-800 pb-4">
           <div>
             <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
               Telemetry Trend
             </span>
-            <h3 className="text-base font-bold text-white">Risk Activity &middot; Last 7 Days</h3>
+            <h3 className="text-base font-bold text-white tracking-tight">
+              Risk Activity &middot; Last 7 Days
+            </h3>
           </div>
 
-          <div className="flex items-center gap-4 text-xs">
-            <span className="flex items-center gap-1.5 text-slate-400">
+          <div className="flex items-center gap-5 text-xs">
+            <span className="flex items-center gap-2 text-slate-300">
               <span className="w-3 h-3 rounded-sm bg-blue-500/40 border border-blue-500" /> AI Requests
             </span>
-            <span className="flex items-center gap-1.5 text-slate-400">
+            <span className="flex items-center gap-2 text-slate-300">
               <span className="w-3 h-3 rounded-sm bg-cyan-400" /> Intercepted Incidents
             </span>
           </div>
         </div>
 
-        <div className="h-64 w-full">
+        <div className="h-64 sm:h-72 w-full min-w-0">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={RISK_ACTIVITY_7DAYS} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+            <AreaChart data={RISK_ACTIVITY_7DAYS} margin={{ top: 10, right: 12, left: -10, bottom: 0 }}>
               <defs>
                 <linearGradient id="requestsGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
@@ -377,7 +403,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <YAxis stroke="#64748B" fontSize={12} tickLine={false} axisLine={false} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#111827',
+                  backgroundColor: '#111A2B',
                   borderColor: '#1E293B',
                   borderRadius: '8px',
                   color: '#F8FAFC',
@@ -407,12 +433,12 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         </div>
       </div>
 
-      {/* ── AI Service Usage & Threat Categories ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
+      {/* ── Lower Dashboard Content: AI Services & Threat Breakdown ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left: AI Service Usage */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
         >
           <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
@@ -434,7 +460,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <div key={srv.id} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white">{srv.name}</span>
+                    <span className="font-semibold text-white">{srv.name}</span>
                     <span
                       className={`text-[9px] font-semibold px-1.5 py-0.2 rounded border ${
                         srv.status === 'Protected'
@@ -464,7 +490,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         {/* Right: Threat Categories Distribution */}
         <div
           style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-          className="p-5 sm:p-6 rounded-xl border shadow-lg flex flex-col justify-between"
+          className="p-6 rounded-xl border shadow-lg flex flex-col justify-between min-w-0"
         >
           <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
             <div>
@@ -476,9 +502,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <span className="text-xs font-mono text-slate-400">Past 30 Days</span>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {THREAT_CATEGORIES_DATA.map((cat, idx) => (
-              <div key={idx} className="space-y-1">
+              <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-slate-300 font-medium">{cat.name}</span>
                   <span className="font-mono font-bold text-white">{cat.value}%</span>
@@ -498,7 +524,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
       {/* ── Recent Security Incidents Table ── */}
       <div
         style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
-        className="p-5 sm:p-6 rounded-xl border shadow-lg"
+        className="p-6 rounded-xl border shadow-lg"
       >
         <div className="flex items-center justify-between mb-5 border-b border-slate-800 pb-3">
           <div>
@@ -518,7 +544,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
         <div className="overflow-x-auto rounded-lg border border-slate-800">
           <table className="w-full text-left text-xs text-slate-200">
-            <thead className="bg-[#0B0E14] text-slate-400 border-b border-slate-800">
+            <thead className="bg-[#0D1424] text-slate-400 border-b border-slate-800">
               <tr>
                 <th className="p-3.5 font-semibold uppercase tracking-wider text-[11px]">Employee</th>
                 <th className="p-3.5 font-semibold uppercase tracking-wider text-[11px]">AI Service</th>
