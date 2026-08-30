@@ -5,6 +5,7 @@ import {
   Menu,
   X,
   Sparkles,
+  LogOut,
 } from 'lucide-react';
 import type { NavTab } from './Sidebar';
 import type { SecurityIncident } from '../../types';
@@ -17,6 +18,8 @@ interface HeaderProps {
   onOpenExtensionModal: () => void;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
+  userEmail?: string;
+  onLogout?: () => void;
 }
 
 const TAB_TITLES: Record<NavTab, { title: string; breadcrumb: string }> = {
@@ -38,11 +41,16 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenExtensionModal,
   mobileMenuOpen,
   setMobileMenuOpen,
+  userEmail,
+  onLogout,
 }) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const info = TAB_TITLES[activeTab] || TAB_TITLES.overview;
 
   const recentUnresolved = incidents.slice(0, 4);
+  const userInitial = userEmail ? userEmail.charAt(0).toUpperCase() : 'A';
+  const displayEmail = userEmail || 'admin@enterprise.com';
 
   return (
     <header
@@ -100,7 +108,10 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Live Security Notifications Bell */}
         <div className="relative">
           <button
-            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            onClick={() => {
+              setNotificationsOpen(!notificationsOpen);
+              setProfileOpen(false);
+            }}
             style={{
               backgroundColor: notificationsOpen ? 'var(--card-hover)' : 'transparent',
               borderColor: 'var(--border)',
@@ -178,16 +189,59 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* ── User Profile Section (Spacious & Vertically Centered) ── */}
-        <div className="flex items-center gap-3 pl-3 sm:pl-4 border-l border-slate-800/80">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white font-bold flex items-center justify-center text-xs shadow-md shrink-0 ring-1 ring-white/10">
-            AD
-          </div>
-          <div className="hidden sm:flex flex-col text-left leading-tight">
-            <span className="text-[13px] font-semibold text-white">Admin</span>
-            <span className="text-[11px] text-slate-400">Security Team</span>
-          </div>
-          <ChevronDown className="w-4 h-4 text-slate-400 hidden sm:block ml-0.5" />
+        {/* ── User Profile Section (With Dropdown Menu) ── */}
+        <div className="relative pl-3 sm:pl-4 border-l border-slate-800/80">
+          <button
+            onClick={() => {
+              setProfileOpen(!profileOpen);
+              setNotificationsOpen(false);
+            }}
+            className="flex items-center gap-3 hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
+          >
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white font-bold flex items-center justify-center text-xs shadow-md shrink-0 ring-1 ring-white/10">
+              {userInitial}
+            </div>
+            <div className="hidden sm:flex flex-col text-left leading-tight">
+              <span className="text-[13px] font-semibold text-white max-w-[120px] truncate">
+                {displayEmail.split('@')[0]}
+              </span>
+              <span className="text-[11px] text-slate-400">Security Team</span>
+            </div>
+            <ChevronDown className={`w-4 h-4 text-slate-400 hidden sm:block ml-0.5 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {profileOpen && (
+            <div
+              style={{
+                backgroundColor: 'var(--cards)',
+                borderColor: 'var(--border)',
+                width: '220px',
+              }}
+              className="absolute right-0 mt-2 rounded-xl border shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 text-left"
+            >
+              <div className="px-3 py-2 border-b border-slate-800/80 mb-1">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  Signed in as
+                </div>
+                <div className="text-xs font-semibold text-slate-200 truncate mt-0.5">
+                  {displayEmail}
+                </div>
+              </div>
+
+              {onLogout && (
+                <button
+                  onClick={() => {
+                    setProfileOpen(false);
+                    onLogout();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </header>

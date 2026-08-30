@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
+import { Login } from './components/auth/Login';
 import { OverviewView } from './components/dashboard/OverviewView';
 import { IncidentsView } from './components/incidents/IncidentsView';
 import { IncidentDrawer } from './components/incidents/IncidentDrawer';
@@ -31,6 +33,10 @@ import type {
 import { ShieldAlert, X } from 'lucide-react';
 
 export default function App() {
+  // Auth State
+  const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState<boolean>(true);
+
   // Navigation State
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -40,6 +46,27 @@ export default function App() {
   const [employees, setEmployees] = useState<EmployeeSecurityProfile[]>(INITIAL_EMPLOYEES);
   const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
+
+  // Listen to Supabase Auth state changes
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   useEffect(() => {
     const loadIncidents = async () => {
@@ -271,6 +298,21 @@ export default function App() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center text-slate-400 select-none">
+        <div className="flex items-center gap-3 bg-[#0D1424] border border-[#1E293B] px-6 py-4 rounded-2xl shadow-2xl">
+          <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm font-semibold text-slate-200">Verifying Security Credentials...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <Login />;
+  }
+
   return (
     <div
       style={{
@@ -371,6 +413,8 @@ export default function App() {
             onOpenExtensionModal={() => setIsExtensionModalOpen(true)}
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
+            userEmail={session.user.email}
+            onLogout={handleLogout}
           />
 
           {/* Main Content Area */}
