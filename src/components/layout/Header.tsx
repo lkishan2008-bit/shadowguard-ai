@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { NavTab } from './Sidebar';
 import type { SecurityIncident } from '../../types';
+import type { Session } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 
 interface HeaderProps {
@@ -20,6 +21,7 @@ interface HeaderProps {
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
   userEmail?: string;
+  session?: Session | null;
   onLogout?: () => void;
 }
 

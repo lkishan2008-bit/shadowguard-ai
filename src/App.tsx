@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { Session } from '@supabase/supabase-js';
 import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -31,7 +32,9 @@ import type {
 import { ShieldAlert, X } from 'lucide-react';
 
 export default function App() {
-  // Auth User Display State
+  // Auth State
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const [userEmail, setUserEmail] = useState<string>('admin@enterprise.com');
   const [userName, setUserName] = useState<string>('Kishan');
 
@@ -45,10 +48,11 @@ export default function App() {
   const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
 
-  // Listen to Supabase Auth state changes & format display user info
+  // Check current session on load & listen for auth changes live
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setLoading(false);
       if (session?.user) {
         const email = session.user.email || 'admin@enterprise.com';
         setUserEmail(email);
@@ -56,12 +60,13 @@ export default function App() {
         const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1).replace('.', ' ');
         setUserName(formattedName);
       }
-    };
-    fetchUser();
+    });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setLoading(false);
       if (session?.user) {
         const email = session.user.email || 'admin@enterprise.com';
         setUserEmail(email);
@@ -75,12 +80,9 @@ export default function App() {
   }, []);
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error.message);
-    } else {
-      window.location.reload();
-    }
+    await supabase.auth.signOut();
+    setSession(null);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -322,6 +324,10 @@ export default function App() {
       }}
       className="min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white"
     >
+      {/* Top Auth Progress Indicator */}
+      {loading && (
+        <div className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-gradient-to-r from-lime-400 via-cyan-400 to-blue-500 animate-pulse" />
+      )}
       {/* ── Live Incident Top-Right Toast Notification ── */}
       {liveToast.show && liveToast.incident && (
         <div className="fixed top-4 right-4 z-50 max-w-sm w-full bg-[#111827] border border-red-800/80 rounded-2xl p-4 shadow-2xl animate-in slide-in-from-top-3 fade-in duration-250 flex items-start justify-between gap-3 text-left">
@@ -418,6 +424,7 @@ export default function App() {
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
             userEmail={userEmail}
+            session={session}
             onLogout={handleLogout}
           />
 
