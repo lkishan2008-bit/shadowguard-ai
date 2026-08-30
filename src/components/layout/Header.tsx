@@ -213,28 +213,28 @@ export const Header: React.FC<HeaderProps> = ({
           {profileOpen && (
             <div
               style={{
-                backgroundColor: 'var(--cards)',
+                backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',
                 width: '220px',
               }}
-              className="absolute right-0 mt-2 rounded-xl border shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 text-left"
+              className="absolute right-0 mt-2 rounded-xl border shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 text-left"
             >
-              <div className="px-3 py-2 border-b border-slate-800/80 mb-1">
-                <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <div className="px-3 py-2 border-b border-[var(--border)] mb-1">
+                <div className="text-[10px] font-semibold uppercase tracking-wider text-[var(--secondary-text)]">
                   Signed in as
                 </div>
-                <div className="text-xs font-semibold text-slate-200 truncate mt-0.5">
+                <div className="text-xs font-semibold text-[var(--main-text)] truncate mt-0.5">
                   {displayEmail}
                 </div>
               </div>
 
               {onLogout && (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setProfileOpen(false);
-                    onLogout();
+                    await onLogout();
                   }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Sign Out</span>

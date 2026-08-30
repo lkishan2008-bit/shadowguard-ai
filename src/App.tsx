@@ -300,10 +300,10 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#030712] flex flex-col items-center justify-center text-slate-400 select-none">
-        <div className="flex items-center gap-3 bg-[#0D1424] border border-[#1E293B] px-6 py-4 rounded-2xl shadow-2xl">
-          <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-semibold text-slate-200">Verifying Security Credentials...</span>
+      <div className="min-h-screen bg-[#f9f9f8] flex flex-col items-center justify-center text-[#70706c] select-none">
+        <div className="flex items-center gap-3 bg-white border border-[#e5e5e2] px-6 py-4 rounded-2xl shadow-sm">
+          <div className="w-5 h-5 border-2 border-[#84cc16] border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm font-semibold text-[#111110]">Verifying Security Credentials...</span>
         </div>
       </div>
     );
