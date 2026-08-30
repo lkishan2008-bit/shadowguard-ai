@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { Session } from '@supabase/supabase-js';
 import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
@@ -32,8 +31,9 @@ import type {
 import { ShieldAlert, X } from 'lucide-react';
 
 export default function App() {
-  // Auth State
-  const [session, setSession] = useState<Session | null>(null);
+  // Auth User Display State
+  const [userEmail, setUserEmail] = useState<string>('admin@enterprise.com');
+  const [userName, setUserName] = useState<string>('Kishan');
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
@@ -45,16 +45,30 @@ export default function App() {
   const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
 
-  // Listen to Supabase Auth state changes
+  // Listen to Supabase Auth state changes & format display user info
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    const fetchUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const email = session.user.email || 'admin@enterprise.com';
+        setUserEmail(email);
+        const namePart = email.split('@')[0];
+        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1).replace('.', ' ');
+        setUserName(formattedName);
+      }
+    };
+    fetchUser();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (session?.user) {
+        const email = session.user.email || 'admin@enterprise.com';
+        setUserEmail(email);
+        const namePart = email.split('@')[0];
+        const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1).replace('.', ' ');
+        setUserName(formattedName);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -366,6 +380,8 @@ export default function App() {
               onSelectTab={handleSelectTab}
               incidentCount={incidents.length}
               criticalCount={criticalCount}
+              userName={userName}
+              userEmail={userEmail}
             />
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -386,6 +402,8 @@ export default function App() {
           onSelectTab={handleSelectTab}
           incidentCount={incidents.length}
           criticalCount={criticalCount}
+          userName={userName}
+          userEmail={userEmail}
         />
 
         {/* Right Main Container (Header + Content Area) */}
@@ -399,7 +417,7 @@ export default function App() {
             onOpenExtensionModal={() => setIsExtensionModalOpen(true)}
             mobileMenuOpen={mobileMenuOpen}
             setMobileMenuOpen={setMobileMenuOpen}
-            userEmail={session?.user?.email}
+            userEmail={userEmail}
             onLogout={handleLogout}
           />
 

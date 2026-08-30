@@ -26,6 +26,8 @@ interface SidebarProps {
   onSelectTab: (tab: NavTab) => void;
   incidentCount: number;
   criticalCount: number;
+  userName?: string;
+  userEmail?: string;
 }
 
 const navigation: Array<{
@@ -54,7 +56,11 @@ export function Sidebar({
   onSelectTab,
   incidentCount,
   criticalCount,
+  userName,
 }: SidebarProps) {
+  const displayName = userName || 'Kishan';
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[248px] border-r border-[var(--border)] bg-[var(--surface)] md:flex md:flex-col">
       {/* Brand */}
@@ -183,13 +189,13 @@ export function Sidebar({
 
         <div className="mt-3 flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-3 py-3">
           <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/15 text-xs font-bold text-blue-300">
-            K
+            {initial}
             <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border-2 border-[var(--surface)] bg-emerald-400" />
           </div>
 
           <div className="min-w-0">
             <div className="truncate text-xs font-semibold text-slate-200">
-              Kishan
+              {displayName}
             </div>
             <div className="truncate text-[10px] text-slate-500">
               Administrator
