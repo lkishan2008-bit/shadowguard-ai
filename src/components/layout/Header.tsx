@@ -47,11 +47,11 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       style={{
-        backgroundColor: 'var(--sidebar)',
-        borderColor: 'var(--border)',
+        backgroundColor: '#0D1424',
+        borderColor: '#1E293B',
         height: '64px',
       }}
-      className="sticky top-0 z-20 flex items-center justify-between px-6 sm:px-8 xl:px-10 border-b select-none w-full"
+      className="sticky top-0 z-30 flex items-center justify-between px-6 sm:px-8 xl:px-10 border-b border-[#1E293B] bg-[#0D1424] select-none w-full shrink-0"
     >
       {/* ── Left: Mobile Toggle & Breadcrumbs ── */}
       <div className="flex items-center gap-3 min-w-0">
