@@ -2,35 +2,44 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #080d18;
-  --surface: #0d1424;
-  --sidebar: #0d1424;
-  --card: #111a2b;
-  --cards: #111a2b;
-  --card-hover: #162238;
+  --bg-main: #f9f9f8;         /* Warm clean off-white background */
+  --bg-sidebar: #f3f3f1;      /* Slightly darker cream for sidebar */
+  --bg-card: #ffffff;         /* Pure white for cards */
+  --border-color: #e5e5e2;    /* Soft subtle border */
+  --text-primary: #111110;    /* Deep near-black for high readability */
+  --text-secondary: #70706c;  /* Muted gray-brown for subtitles */
+  --accent-lime: #b6f542;     /* The bright chart/accent green */
 
-  --primary: #3b82f6;
-  --primary-bright: #60a5fa;
-  --cyan: #22d3ee;
+  /* Theme Mapping */
+  --bg: var(--bg-main);
+  --surface: var(--bg-sidebar);
+  --sidebar: var(--bg-sidebar);
+  --card: var(--bg-card);
+  --cards: var(--bg-card);
+  --card-hover: #f5f5f3;
 
-  --main-text: #f8fafc;
-  --secondary-text: #94a3b8;
-  --muted-text: #64748b;
+  --primary: #84cc16;
+  --primary-bright: #a3e635;
+  --cyan: #b6f542;
 
-  --border: #1e293b;
-  --success: #22c55e;
+  --main-text: var(--text-primary);
+  --secondary-text: var(--text-secondary);
+  --muted-text: #8c8c87;
+
+  --border: var(--border-color);
+  --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
 
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   --sidebar-width: 248px;
   --header-height: 72px;
 
   font-family: var(--font-sans);
-  color: var(--main-text);
-  background: var(--bg);
+  color: var(--text-primary);
+  background: var(--bg-main);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -40,7 +49,7 @@
 }
 
 html {
-  background: var(--bg);
+  background: var(--bg-main);
   scroll-behavior: smooth;
 }
 
@@ -48,8 +57,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--main-text);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 button,
@@ -69,8 +79,8 @@ a {
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.35);
-  color: #fff;
+  background: rgba(182, 245, 66, 0.4);
+  color: #111110;
 }
 
 /* Scrollbar */
@@ -81,24 +91,24 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: var(--bg-main);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #243249;
+  background: #dcdcd8;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #33445f;
+  background: #c8c8c3;
 }
 
 /* Main application shell */
 
 .app-shell {
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--main-text);
+  background: var(--bg-main);
+  color: var(--text-primary);
 }
 
 .main-content-offset {
@@ -115,8 +125,8 @@ a {
 /* Reusable surfaces */
 
 .sg-card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
 }
 
@@ -129,7 +139,7 @@ a {
 
 .sg-card-hover:hover {
   background: var(--card-hover);
-  border-color: #2b3b55;
+  border-color: #d8d8d4;
 }
 
 /* Typography */
@@ -140,17 +150,18 @@ a {
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.025em;
+  color: var(--text-primary);
 }
 
 .sg-page-description {
   margin: 7px 0 0;
-  color: var(--secondary-text);
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .sg-label {
-  color: var(--muted-text);
+  color: var(--text-secondary);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -170,10 +181,10 @@ a {
   gap: 8px;
   min-height: 38px;
   padding: 0 14px;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-color);
   border-radius: 9px;
-  background: var(--card);
-  color: var(--main-text);
+  background: var(--bg-card);
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 600;
   transition: all 150ms ease;
@@ -181,18 +192,18 @@ a {
 
 .sg-button:hover {
   background: var(--card-hover);
-  border-color: #33445f;
+  border-color: #d8d8d4;
 }
 
 .sg-button-primary {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: #fff;
+  border-color: var(--accent-lime);
+  background: var(--accent-lime);
+  color: #111110;
 }
 
 .sg-button-primary:hover {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: #a3e635;
+  border-color: #a3e635;
 }
 
 /* Status */
