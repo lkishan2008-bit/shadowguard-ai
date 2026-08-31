@@ -205,7 +205,6 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
             <option value="ChatGPT">ChatGPT (OpenAI)</option>
             <option value="Claude">Claude (Anthropic)</option>
             <option value="Gemini">Gemini (Google)</option>
-            <option value="Microsoft Copilot">Microsoft Copilot</option>
           </select>
         </div>
 
@@ -427,3 +426,4 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
     </div>
   );
 };
+

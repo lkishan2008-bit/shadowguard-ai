@@ -192,7 +192,6 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
               <option value="ChatGPT">ChatGPT</option>
               <option value="Claude">Claude</option>
               <option value="Gemini">Gemini</option>
-              <option value="Microsoft Copilot">Copilot</option>
             </select>
 
             {/* Severity Filter */}
@@ -337,3 +336,4 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
     </div>
   );
 };
+

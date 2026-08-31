@@ -239,17 +239,6 @@ export const INITIAL_AI_SERVICES: AIServiceConfig[] = [
     lastUsed: '14 min ago',
     iconType: 'gemini',
   },
-  {
-    id: 'SRV-04',
-    name: 'Microsoft Copilot',
-    status: 'Not Connected',
-    requests: 0,
-    incidents: 0,
-    riskTier: 'LOW',
-    defaultAction: 'ALLOW',
-    lastUsed: 'Never',
-    iconType: 'copilot',
-  },
 ];
 
 export const INITIAL_POLICIES: SecurityPolicyRule[] = [
@@ -398,3 +387,4 @@ export DB_USER=admin_super
 export ADMIN_EMAIL=ops-sec@democorp.internal`,
   },
 ];
+

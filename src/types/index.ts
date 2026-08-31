@@ -1,7 +1,7 @@
 export type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type PolicyAction = 'ALLOW' | 'WARN' | 'REDACT' | 'BLOCK';
 export type IncidentAction = 'BLOCKED' | 'REDACTED' | 'WARNED' | 'ALLOWED';
-export type AIServiceName = 'ChatGPT' | 'Claude' | 'Gemini' | 'Microsoft Copilot';
+export type AIServiceName = 'ChatGPT' | 'Claude' | 'Gemini';
 export type AIServiceStatus = 'Protected' | 'Monitoring Only' | 'Not Connected';
 
 export interface DetectionEntity {
@@ -53,7 +53,7 @@ export interface AIServiceConfig {
   riskTier: Severity;
   defaultAction: PolicyAction;
   lastUsed: string;
-  iconType: 'chatgpt' | 'claude' | 'gemini' | 'copilot';
+  iconType: 'chatgpt' | 'claude' | 'gemini';
 }
 
 export interface SecurityPolicyRule {
@@ -75,3 +75,4 @@ export interface MetricCardData {
   trend: 'up' | 'down' | 'neutral';
   isPositiveChange?: boolean;
 }
+

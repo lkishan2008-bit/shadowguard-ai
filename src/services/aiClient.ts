@@ -38,19 +38,6 @@ export async function analyzePromptWithAI(
     };
   }
 
-  if (service === 'Microsoft Copilot') {
-    return {
-      success: false,
-      service,
-      configured: false,
-      fallback: true,
-      result:
-        '[ShadowGuard] Microsoft Copilot is currently Not Connected. Enterprise integration is pending in Phase 3.',
-      error: 'Microsoft Copilot is not connected.',
-      timestamp,
-    };
-  }
-
   try {
     const response = await fetch('/api/ai/analyze', {
       method: 'POST',
@@ -125,3 +112,4 @@ export async function fetchAIProvidersStatus(): Promise<Record<AIServiceName, Pr
     return null;
   }
 }
+

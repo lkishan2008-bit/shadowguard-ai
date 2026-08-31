@@ -30,7 +30,6 @@ const SERVICE_RISK_MULTIPLIER: Record<AIServiceName, number> = {
   ChatGPT: 1.15,
   Claude: 1.05,
   Gemini: 1.10,
-  'Microsoft Copilot': 1.0,
 };
 
 export function evaluateRisk(
@@ -107,3 +106,4 @@ export function evaluateRisk(
     summary,
   };
 }
+
