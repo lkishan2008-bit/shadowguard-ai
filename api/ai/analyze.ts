@@ -1,4 +1,4 @@
-import type { IncomingMessage, ServerResponse } from 'node:http';
+﻿import type { IncomingMessage, ServerResponse } from 'node:http';
 
 interface AnalyzeRequestBody {
   service?: string;
@@ -56,7 +56,7 @@ function sendJsonResponse(res: ServerResponse, statusCode: number, payload: AIRe
   res.end(JSON.stringify(payload));
 }
 
-// ── Provider Execution Handlers ──────────────────────────────────────────────
+// â”€â”€ Provider Execution Handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function callOpenAI(prompt: string, apiKey: string): Promise<{ result: string; model: string }> {
   const model = 'gpt-4o-mini';
@@ -64,6 +64,7 @@ async function callOpenAI(prompt: string, apiKey: string): Promise<{ result: str
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey,
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
@@ -104,6 +105,7 @@ async function callAnthropic(prompt: string, apiKey: string): Promise<{ result: 
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey,
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
     },
@@ -132,13 +134,14 @@ async function callAnthropic(prompt: string, apiKey: string): Promise<{ result: 
 }
 
 async function callGemini(prompt: string, apiKey: string): Promise<{ result: string; model: string }> {
-  const model = 'gemini-1.5-flash';
+  const model = 'gemini-3.7-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey,
     },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
@@ -166,7 +169,7 @@ async function callGemini(prompt: string, apiKey: string): Promise<{ result: str
   return { result: text.trim(), model };
 }
 
-// ── Vercel Serverless Function Handler ───────────────────────────────────────
+// â”€â”€ Vercel Serverless Function Handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default async function handler(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const timestamp = new Date().toISOString();
@@ -208,19 +211,6 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
   const service = (body.service || 'ChatGPT').trim();
 
-  // Microsoft Copilot is intentionally not connected yet
-  if (service === 'Microsoft Copilot') {
-    sendJsonResponse(res, 400, {
-      success: false,
-      service: 'Microsoft Copilot',
-      configured: false,
-      error: 'Microsoft Copilot integration is not yet connected in this enterprise environment.',
-      timestamp,
-    });
-    return;
-  }
-
-  // Resolve server-side API Key (never returned or exposed to client)
   let apiKey = '';
   if (service === 'ChatGPT') {
     apiKey = process.env.OPENAI_API_KEY || process.env.VITE_OPENAI_API_KEY || '';
@@ -285,3 +275,6 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     });
   }
 }
+
+
+

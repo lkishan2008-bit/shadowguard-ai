@@ -1,4 +1,4 @@
-import type { IncomingMessage, ServerResponse } from 'node:http';
+﻿import type { IncomingMessage, ServerResponse } from 'node:http';
 
 interface ProviderStatus {
   configured: boolean;
@@ -51,12 +51,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     Gemini: {
       configured: isGeminiConfigured,
       status: isGeminiConfigured ? 'Protected' : 'Not Connected',
-      model: 'gemini-1.5-flash',
-    },
-    'Microsoft Copilot': {
-      configured: false,
-      status: 'Not Connected',
-      model: 'N/A',
+      model: 'gemini-3.7-flash',
     },
   };
 
@@ -66,3 +61,5 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     timestamp,
   });
 }
+
+
