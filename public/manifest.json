@@ -1,24 +1,28 @@
 {
-  "manifest_version": 3,
-  "name": "ShadowGuard AI - Privacy DLP",
-  "version": "1.0",
-  "description": "Privacy-first data loss prevention for AI workflows",
-  "action": {
-    "default_popup": "index.html",
-    "default_icon": "icon.png"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://gemini.google.com/*",
-        "https://claude.ai/*"
-      ],
-      "js": ["content.js"]
-    }
-  ],
-  "permissions": ["storage", "activeTab"],
-  "host_permissions": [
-    "https://*.supabase.co/*"
-  ]
+    "manifest_version":  3,
+    "name":  "ShadowGuard AI - Privacy DLP",
+    "version":  "1.0",
+    "description":  "Privacy-first data loss prevention for AI workflows",
+    "action":  {
+                   "default_popup":  "index.html"
+               },
+    "content_scripts":  [
+                            {
+                                "matches":  [
+                                                "https://chatgpt.com/*",
+                                                "https://gemini.google.com/*",
+                                                "https://claude.ai/*"
+                                            ],
+                                "js":  [
+                                           "content.js"
+                                       ]
+                            }
+                        ],
+    "permissions":  [
+                        "storage",
+                        "activeTab"
+                    ],
+    "host_permissions":  [
+                             "https://*.supabase.co/*"
+                         ]
 }

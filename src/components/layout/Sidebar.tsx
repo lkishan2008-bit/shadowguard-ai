@@ -27,7 +27,7 @@ interface SidebarProps {
   criticalCount: number;
 }
 
-const navigation: Array<{
+export const navigation: Array<{
   id: NavTab;
   label: string;
   icon: typeof LayoutDashboard;
@@ -39,7 +39,7 @@ const navigation: Array<{
   { id: 'policies', label: 'Policies', icon: FileCheck2 },
 ];
 
-const workspace: Array<{
+export const workspace: Array<{
   id: NavTab;
   label: string;
   icon: typeof PlayCircle;
