@@ -55,12 +55,18 @@ export const AIServicesView: React.FC<AIServicesViewProps> = ({
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
                       srv.status === 'Protected'
                         ? 'bg-emerald-950 text-emerald-400 border-emerald-800'
+                        : srv.status === 'Monitoring Only'
+                        ? 'bg-amber-950 text-amber-400 border-amber-800'
                         : 'bg-slate-800 text-slate-400 border-slate-700'
                     }`}
                   >
                     <span
                       className={`w-2 h-2 rounded-full ${
-                        srv.status === 'Protected' ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'
+                        srv.status === 'Protected'
+                          ? 'bg-emerald-400 animate-pulse'
+                          : srv.status === 'Monitoring Only'
+                          ? 'bg-amber-400'
+                          : 'bg-slate-500'
                       }`}
                     />
                     {srv.status}
@@ -124,13 +130,20 @@ export const AIServicesView: React.FC<AIServicesViewProps> = ({
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
                 <button
                   onClick={() => onToggleServiceProtection(srv.id)}
-                  className={`flex-1 py-2 px-3 rounded-xl font-semibold text-xs transition-colors border ${
+                  disabled={srv.status === 'Not Connected'}
+                  className={`flex-1 py-2 px-3 rounded-xl font-semibold text-xs transition-colors border disabled:opacity-40 disabled:cursor-not-allowed ${
                     srv.status === 'Protected'
                       ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
-                      : 'bg-emerald-600 hover:bg-emerald-500 text-white border-transparent'
+                      : srv.status === 'Monitoring Only'
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white border-transparent'
+                      : 'bg-slate-800/60 text-slate-500 border-slate-800'
                   }`}
                 >
-                  {srv.status === 'Protected' ? 'Pause DLP Inspection' : 'Enable Protection'}
+                  {srv.status === 'Protected'
+                    ? 'Pause DLP Inspection'
+                    : srv.status === 'Monitoring Only'
+                    ? 'Enable Protection'
+                    : 'Endpoint Not Connected'}
                 </button>
 
                 <button

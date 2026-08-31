@@ -2,6 +2,7 @@ export type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type PolicyAction = 'ALLOW' | 'WARN' | 'REDACT' | 'BLOCK';
 export type IncidentAction = 'BLOCKED' | 'REDACTED' | 'WARNED' | 'ALLOWED';
 export type AIServiceName = 'ChatGPT' | 'Claude' | 'Gemini' | 'Microsoft Copilot';
+export type AIServiceStatus = 'Protected' | 'Monitoring Only' | 'Not Connected';
 
 export interface DetectionEntity {
   category: string;

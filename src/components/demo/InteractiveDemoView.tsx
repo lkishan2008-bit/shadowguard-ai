@@ -13,6 +13,7 @@ import type { RiskEvaluation } from '../../detection/riskEngine';
 import { SecurityWarningModal } from './SecurityWarningModal';
 import { SAMPLE_DEMO_PROMPTS } from '../../data/mockData';
 import type { SecurityIncident, AIServiceName } from '../../types';
+import { analyzePromptWithAI, type AIAnalyzeResult } from '../../services/aiClient';
 
 interface InteractiveDemoViewProps {
   onNewIncidentCreated: (incident: SecurityIncident) => void;
@@ -68,6 +69,19 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
   const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const [lastActionTaken, setLastActionTaken] = useState<string | null>(null);
+  const [aiResponse, setAiResponse] = useState<AIAnalyzeResult | null>(null);
+  const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
+
+  const runAiAnalysis = async (textToDispatch: string) => {
+    setIsAiLoading(true);
+    setAiResponse(null);
+    try {
+      const response = await analyzePromptWithAI(targetService, textToDispatch);
+      setAiResponse(response);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   const handleInspect = () => {
     const detected = detectSensitiveData(inputPrompt);
@@ -81,6 +95,7 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
     } else {
       setSanitizedOutput(inputPrompt);
       setLastActionTaken('ALLOWED (Clean prompt)');
+      void runAiAnalysis(inputPrompt);
     }
   };
 
@@ -109,6 +124,7 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
     };
 
     onNewIncidentCreated(newInc);
+    void runAiAnalysis(sanitizedText);
   };
 
   const handleCopy = async () => {
@@ -124,6 +140,8 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
     setDetections([]);
     setRiskEval(null);
     setLastActionTaken(null);
+    setAiResponse(null);
+    setIsAiLoading(false);
   };
 
   const handleSelectSample = (index: number) => {
@@ -134,6 +152,8 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
     setDetections([]);
     setRiskEval(null);
     setLastActionTaken(null);
+    setAiResponse(null);
+    setIsAiLoading(false);
   };
 
   return (
@@ -286,6 +306,63 @@ export const InteractiveDemoView: React.FC<InteractiveDemoViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 3. Secure AI Endpoint Response Card (Stage 2 Integration) */}
+      {(isAiLoading || aiResponse) && (
+        <div
+          style={{ backgroundColor: 'var(--cards)', borderColor: 'var(--border)' }}
+          className="p-5 md:p-6 rounded-2xl border shadow-xl space-y-4 animate-in fade-in duration-200"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-800 flex items-center justify-center text-cyan-400">
+                <Brain className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-white tracking-tight">
+                  External AI Endpoint Response ({targetService})
+                </h3>
+                <span className="text-[11px] text-slate-400">
+                  {isAiLoading
+                    ? `Dispatching sanitized prompt to ${targetService} serverless endpoint...`
+                    : aiResponse?.fallback
+                    ? 'DLP sanitized execution (safe fallback response)'
+                    : `Live LLM Response via ${aiResponse?.modelUsed || targetService}`}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span
+                className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                  isAiLoading
+                    ? 'bg-blue-950 text-cyan-300 border-blue-800 animate-pulse'
+                    : aiResponse?.success
+                    ? 'bg-emerald-950 text-emerald-400 border-emerald-800'
+                    : 'bg-amber-950 text-amber-300 border-amber-800'
+                }`}
+              >
+                {isAiLoading
+                  ? 'Processing Request...'
+                  : aiResponse?.success
+                  ? `✓ Verified Clean (${aiResponse.modelUsed || targetService})`
+                  : 'Safe DLP Fallback'}
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-[#080B12] border border-slate-800 rounded-xl p-4 text-xs font-mono text-slate-200 leading-relaxed shadow-inner min-h-[80px] whitespace-pre-wrap break-words">
+            {isAiLoading ? (
+              <div className="flex items-center gap-3 text-slate-400 py-3">
+                <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+                <span>Executing secure AI query via serverless proxy...</span>
+              </div>
+            ) : (
+              aiResponse?.result || 'No response returned.'
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Real-Time Detection Findings Log */}
       {detections.length > 0 && (
