@@ -40,7 +40,11 @@ export default function App() {
   // Core Data State
   const [incidents, setIncidents] = useState<SecurityIncident[]>([]);
   const [employees, setEmployees] = useState<EmployeeSecurityProfile[]>([]);
-  const [aiServices, setAiServices] = useState<AIServiceConfig[]>([]);
+  const [aiServices, setAiServices] = useState<AIServiceConfig[]>([
+    { id: '1', name: 'ChatGPT', status: 'Protected', requests: 0, incidents: 0, riskTier: 'LOW', defaultAction: 'WARN', lastUsed: 'Just now', iconType: 'chatgpt' },
+    { id: '2', name: 'Claude', status: 'Protected', requests: 0, incidents: 0, riskTier: 'LOW', defaultAction: 'WARN', lastUsed: 'Just now', iconType: 'claude' },
+    { id: '3', name: 'Gemini', status: 'Protected', requests: 0, incidents: 0, riskTier: 'LOW', defaultAction: 'WARN', lastUsed: 'Just now', iconType: 'gemini' }
+  ]);
   const [policies, setPolicies] = useState<SecurityPolicyRule[]>([]);
 
   // Check current session on load & listen for auth changes live
