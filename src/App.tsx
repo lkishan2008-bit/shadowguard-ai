@@ -16,6 +16,7 @@ import { SettingsView } from './components/settings/SettingsView';
 import { ExtensionPopupModal } from './components/extension/ExtensionPopupModal';
 import { detectSensitiveData } from './detection/india-rules';
 import { supabase } from './lib/supabase';
+import { Login } from './components/auth/Login';
 import {
   INITIAL_INCIDENTS,
   INITIAL_EMPLOYEES,
@@ -35,8 +36,8 @@ export default function App() {
   // Auth State
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [userEmail, setUserEmail] = useState<string>('admin@enterprise.com');
-  const [userName, setUserName] = useState<string>('Kishan');
+  const [userEmail, setUserEmail] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
 
   // Navigation State
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
@@ -186,7 +187,7 @@ export default function App() {
     loadEmployees();
   }, []);
 
-    // Load AI Services from Supabase
+  // Load AI Services from Supabase
   useEffect(() => {
     const loadAI = async () => {
       const { data, error } = await supabase
@@ -315,6 +316,22 @@ export default function App() {
     }
   };
 
+  // ── Auth Gate ──
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0D1424] flex items-center justify-center text-slate-300">
+        <div className="text-sm font-medium">Loading ShadowGuard...</div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <Login />;
+  }
+
+  // Suppress unused-variable warning — userName is kept for future profile use
+  void userName;
+
   return (
     <div
       style={{
@@ -324,10 +341,6 @@ export default function App() {
       }}
       className="min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white"
     >
-      {/* Top Auth Progress Indicator */}
-      {loading && (
-        <div className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-gradient-to-r from-lime-400 via-cyan-400 to-blue-500 animate-pulse" />
-      )}
       {/* ── Live Incident Top-Right Toast Notification ── */}
       {liveToast.show && liveToast.incident && (
         <div className="fixed top-4 right-4 z-50 max-w-sm w-full bg-[#111827] border border-red-800/80 rounded-2xl p-4 shadow-2xl animate-in slide-in-from-top-3 fade-in duration-250 flex items-start justify-between gap-3 text-left">
@@ -386,8 +399,6 @@ export default function App() {
               onSelectTab={handleSelectTab}
               incidentCount={incidents.length}
               criticalCount={criticalCount}
-              userName={userName}
-              userEmail={userEmail}
             />
             <button
               onClick={() => setMobileMenuOpen(false)}
@@ -408,8 +419,6 @@ export default function App() {
           onSelectTab={handleSelectTab}
           incidentCount={incidents.length}
           criticalCount={criticalCount}
-          userName={userName}
-          userEmail={userEmail}
         />
 
         {/* Right Main Container (Header + Content Area) */}
