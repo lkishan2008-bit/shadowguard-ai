@@ -17,12 +17,6 @@ import { ExtensionPopupModal } from './components/extension/ExtensionPopupModal'
 import { detectSensitiveData } from './detection/india-rules';
 import { supabase } from './lib/supabase';
 import { Login } from './components/auth/Login';
-import {
-  INITIAL_INCIDENTS,
-  INITIAL_EMPLOYEES,
-  INITIAL_AI_SERVICES,
-  INITIAL_POLICIES,
-} from './data/mockData';
 import type {
   SecurityIncident,
   EmployeeSecurityProfile,
@@ -44,10 +38,10 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Core Data State
-  const [incidents, setIncidents] = useState<SecurityIncident[]>(INITIAL_INCIDENTS);
-  const [employees, setEmployees] = useState<EmployeeSecurityProfile[]>(INITIAL_EMPLOYEES);
-  const [aiServices, setAiServices] = useState<AIServiceConfig[]>(INITIAL_AI_SERVICES);
-  const [policies, setPolicies] = useState<SecurityPolicyRule[]>(INITIAL_POLICIES);
+  const [incidents, setIncidents] = useState<SecurityIncident[]>([]);
+  const [employees, setEmployees] = useState<EmployeeSecurityProfile[]>([]);
+  const [aiServices, setAiServices] = useState<AIServiceConfig[]>([]);
+  const [policies, setPolicies] = useState<SecurityPolicyRule[]>([]);
 
   // Check current session on load & listen for auth changes live
   useEffect(() => {
