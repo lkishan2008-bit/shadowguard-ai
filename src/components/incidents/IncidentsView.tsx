@@ -71,43 +71,32 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              if (incidents.length === 0) {
-                alert('No audit logs available to export.');
+              if (!incidents || incidents.length === 0) {
+                alert("No security incidents available to export.");
                 return;
               }
-              const printWindow = window.open('', '_blank');
-              if (!printWindow) {
-                alert('Please allow popups to export the report.');
-                return;
-              }
-              
-              const tableRows = incidents.map((inc) => `
-                <tr>
-                  <td>${inc.timestamp}</td>
-                  <td>${inc.aiService}</td>
-                  <td>${inc.action}</td>
-                  <td>${inc.detectedCategories.join(', ')}</td>
-                  <td>${inc.riskScore}</td>
-                </tr>
-              `).join('');
 
-              const htmlContent = \`
+              const printWindow = window.open('', '_blank');
+              if (!printWindow) return;
+
+              const htmlContent = `
                 <!DOCTYPE html>
                 <html>
                   <head>
-                    <title>Audit Log Report</title>
+                    <title>ShadowGuard - Security Audit Logs</title>
                     <style>
                       body { font-family: system-ui, -apple-system, sans-serif; padding: 40px; color: #333; }
-                      h1 { color: #111827; margin-bottom: 8px; }
+                      h1 { color: #111827; margin-bottom: 8px; font-size: 24px; }
                       .meta { color: #6b7280; margin-bottom: 32px; font-size: 14px; }
                       table { width: 100%; border-collapse: collapse; font-size: 14px; }
-                      th { background-color: #f9fafb; font-weight: 600; text-align: left; color: #374151; border-bottom: 2px solid #e5e7eb; }
-                      th, td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+                      th { background-color: #f9fafb; font-weight: 600; text-align: left; color: #374151; border-bottom: 2px solid #e5e7eb; padding: 12px 16px; }
+                      td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; color: #4b5563; }
+                      tr:nth-child(even) { background-color: #fcfcfc; }
                     </style>
                   </head>
                   <body>
-                    <h1>Security Audit Log Report</h1>
-                    <div class="meta">Generated on \${new Date().toLocaleString()} &bull; \${incidents.length} events</div>
+                    <h1>ShadowGuard AI - Security Audit Report</h1>
+                    <div class="meta">Generated on: ${new Date().toLocaleString()} | Total Incidents: ${incidents.length}</div>
                     <table>
                       <thead>
                         <tr>
@@ -119,22 +108,30 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
                         </tr>
                       </thead>
                       <tbody>
-                        \${tableRows}
+                        ${incidents.map(inc => `
+                          <tr>
+                            <td>${new Date(inc.timestamp).toLocaleString()}</td>
+                            <td>${inc.aiService}</td>
+                            <td><b>${inc.action}</b></td>
+                            <td>${inc.detectedCategories?.join(', ') || 'N/A'}</td>
+                            <td>${inc.riskScore}</td>
+                          </tr>
+                        `).join('')}
                       </tbody>
                     </table>
+                    <script>
+                      window.onload = () => {
+                        setTimeout(() => {
+                          window.print();
+                        }, 250);
+                      };
+                    </script>
                   </body>
                 </html>
-              \`;
-              
-              printWindow.document.open();
+              `;
+
               printWindow.document.write(htmlContent);
               printWindow.document.close();
-              
-              setTimeout(() => {
-                printWindow.focus();
-                printWindow.print();
-                printWindow.close();
-              }, 250);
             }}
             style={{
               backgroundColor: '#111827',
