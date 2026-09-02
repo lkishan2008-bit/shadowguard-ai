@@ -71,13 +71,70 @@ export const IncidentsView: React.FC<IncidentsViewProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
-              const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(incidents, null, 2));
-              const downloadAnchor = document.createElement('a');
-              downloadAnchor.setAttribute('href', dataStr);
-              downloadAnchor.setAttribute('download', 'shadowguard-security-incidents.json');
-              document.body.appendChild(downloadAnchor);
-              downloadAnchor.click();
-              downloadAnchor.remove();
+              if (incidents.length === 0) {
+                alert('No audit logs available to export.');
+                return;
+              }
+              const printWindow = window.open('', '_blank');
+              if (!printWindow) {
+                alert('Please allow popups to export the report.');
+                return;
+              }
+              
+              const tableRows = incidents.map((inc) => `
+                <tr>
+                  <td>${inc.timestamp}</td>
+                  <td>${inc.aiService}</td>
+                  <td>${inc.action}</td>
+                  <td>${inc.detectedCategories.join(', ')}</td>
+                  <td>${inc.riskScore}</td>
+                </tr>
+              `).join('');
+
+              const htmlContent = \`
+                <!DOCTYPE html>
+                <html>
+                  <head>
+                    <title>Audit Log Report</title>
+                    <style>
+                      body { font-family: system-ui, -apple-system, sans-serif; padding: 40px; color: #333; }
+                      h1 { color: #111827; margin-bottom: 8px; }
+                      .meta { color: #6b7280; margin-bottom: 32px; font-size: 14px; }
+                      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+                      th { background-color: #f9fafb; font-weight: 600; text-align: left; color: #374151; border-bottom: 2px solid #e5e7eb; }
+                      th, td { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+                    </style>
+                  </head>
+                  <body>
+                    <h1>Security Audit Log Report</h1>
+                    <div class="meta">Generated on \${new Date().toLocaleString()} &bull; \${incidents.length} events</div>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>Service</th>
+                          <th>Action</th>
+                          <th>Categories</th>
+                          <th>Risk Score</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        \${tableRows}
+                      </tbody>
+                    </table>
+                  </body>
+                </html>
+              \`;
+              
+              printWindow.document.open();
+              printWindow.document.write(htmlContent);
+              printWindow.document.close();
+              
+              setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+              }, 250);
             }}
             style={{
               backgroundColor: '#111827',

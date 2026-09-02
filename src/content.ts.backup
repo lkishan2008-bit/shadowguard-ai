@@ -1,19 +1,19 @@
-﻿/**
- * ShadowGuard AI â€” DLP Content Script
+/**
+ * ShadowGuard AI — DLP Content Script
  * Runs on: ChatGPT, Gemini, Claude
  *
  * Intercepts prompt submission, evaluates risk, then:
- *   ALLOW  â†’ submits normally
- *   WARN   â†’ shows non-blocking warning banner; user can dismiss and proceed
- *   REDACT â†’ silently rewrites detected values with [REDACTED_*] tokens, then submits
- *   BLOCK  â†’ prevents submission and shows a hard security warning
+ *   ALLOW  → submits normally
+ *   WARN   → shows non-blocking warning banner; user can dismiss and proceed
+ *   REDACT → silently rewrites detected values with [REDACTED_*] tokens, then submits
+ *   BLOCK  → prevents submission and shows a hard security warning
  */
 
 import { sanitizePrompt } from './redaction/redactor';
 import { evaluateRisk } from './detection/riskEngine';
 import type { AIServiceName } from './types';
 
-// â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Constants ─────────────────────────────────────────────────────────────────
 
 const ATTR = 'data-sg-active';     // marks elements that already have listeners
 const MODAL_ID = 'sg-dlp-modal';   // single modal kept in DOM at all times
@@ -29,7 +29,7 @@ function detectService(): AIServiceName {
 
 const SERVICE: AIServiceName = detectService();
 
-// â”€â”€ Selectors (per-service submit buttons) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Selectors (per-service submit buttons) ────────────────────────────────────
 
 const SEND_BUTTON_SELECTORS = [
   // ChatGPT
@@ -37,11 +37,9 @@ const SEND_BUTTON_SELECTORS = [
   'button[aria-label="Send prompt"]',
   // Gemini
   'button.send-button',
-  'button[data-testid="chat-input-send"]',
   'button[aria-label="Send message"]',
   'mat-icon[data-mat-icon-name="send"]',
   // Claude
-  'button[data-testid="chat-input-send"]',
   'button[aria-label="Send Message"]',
   'button[data-value="send"]',
   // Generic fallback
@@ -54,7 +52,7 @@ const INPUT_SELECTORS = [
   'textarea',
 ];
 
-// â”€â”€ Get current text from an input element â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Get current text from an input element ────────────────────────────────────
 
 function getInputText(el: Element): string {
   if (el instanceof HTMLTextAreaElement || el instanceof HTMLInputElement) {
@@ -93,7 +91,7 @@ function setInputText(el: Element, text: string): void {
   }
 }
 
-// â”€â”€ Modal / UI helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Modal / UI helpers ────────────────────────────────────────────────────────
 
 function ensureModalContainer(): HTMLElement {
   let modal = document.getElementById(MODAL_ID);
@@ -123,7 +121,7 @@ function closeModal(): void {
 
 // Colour tokens
 const COLOR: Record<string, { bg: string; border: string; badge: string; text: string }> = {
-  WARN: { bg: '#1a1200', border: '#ca8a04', badge: '#854d0e', text: '#fbbf24' },
+  WARN:  { bg: '#1a1200', border: '#ca8a04', badge: '#854d0e', text: '#fbbf24' },
   BLOCK: { bg: '#1a0000', border: '#dc2626', badge: '#7f1d1d', text: '#f87171' },
 };
 
@@ -155,7 +153,7 @@ function showModal({ action, categories, riskScore, onProceed }: ModalOptions): 
     position: relative;
   `;
 
-  const icon = isBlock ? 'ðŸš«' : 'âš ï¸';
+  const icon = isBlock ? '🚫' : '⚠️';
   const title = isBlock ? 'Submission Blocked' : 'Sensitive Data Detected';
   const subtitle = isBlock
     ? 'This prompt contains critical secrets or PII and cannot be sent.'
@@ -182,13 +180,14 @@ function showModal({ action, categories, riskScore, onProceed }: ModalOptions): 
     </div>
     <div style="margin-bottom:16px;line-height:1.7">${tagList}</div>
     <div style="display:flex;gap:8px;justify-content:flex-end">
-      ${!isBlock
-      ? `<button id="sg-proceed" style="
+      ${
+        !isBlock
+          ? `<button id="sg-proceed" style="
               padding:7px 16px;border-radius:8px;border:1px solid ${c.border};
               background:transparent;color:${c.text};font-size:12px;font-weight:600;
               cursor:pointer">Send Anyway</button>`
-      : ''
-    }
+          : ''
+      }
       <button id="sg-dismiss" style="
         padding:7px 16px;border-radius:8px;border:none;
         background:${isBlock ? c.border : '#334155'};
@@ -197,7 +196,7 @@ function showModal({ action, categories, riskScore, onProceed }: ModalOptions): 
       </button>
     </div>
     <div style="margin-top:12px;font-size:10px;color:#475569;text-align:right">
-      ðŸ›¡ï¸ ShadowGuard AI â€” ${SERVICE}
+      🛡️ ShadowGuard AI — ${SERVICE}
     </div>
   `;
 
@@ -218,7 +217,7 @@ function showModal({ action, categories, riskScore, onProceed }: ModalOptions): 
   }
 }
 
-// â”€â”€ Core DLP enforcement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Core DLP enforcement ──────────────────────────────────────────────────────
 
 /**
  * Called when the user attempts to submit a prompt.
@@ -243,7 +242,7 @@ function enforceDLP(inputEl: Element, doSubmit: () => void): void {
   const categories = [...new Set(detections.map((d) => d.category))];
 
   console.info(
-    `[ShadowGuard AI] ${SERVICE} â€” ${recommendedAction} (risk ${riskScore})`,
+    `[ShadowGuard AI] ${SERVICE} — ${recommendedAction} (risk ${riskScore})`,
     categories
   );
 
@@ -277,7 +276,7 @@ function enforceDLP(inputEl: Element, doSubmit: () => void): void {
   }
 }
 
-// â”€â”€ Find the active input element â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Find the active input element ─────────────────────────────────────────────
 
 function findActiveInput(): Element | null {
   for (const sel of INPUT_SELECTORS) {
@@ -290,7 +289,7 @@ function findActiveInput(): Element | null {
   return null;
 }
 
-// â”€â”€ Attach submit interceptors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Attach submit interceptors ────────────────────────────────────────────────
 
 function attachSubmitInterceptors(): void {
   // 1. Intercept send-button clicks
@@ -307,7 +306,7 @@ function attachSubmitInterceptors(): void {
 
           const text = getInputText(inputEl);
           const { detections } = sanitizePrompt(text);
-          if (detections.length === 0) return; // clean â€” let it through
+          if (detections.length === 0) return; // clean — let it through
 
           // We must prevent the default click so the SPA doesn't submit yet
           e.preventDefault();
@@ -320,7 +319,7 @@ function attachSubmitInterceptors(): void {
             btn.setAttribute(ATTR, 'true');
           });
         },
-        true // capture phase â€” runs before SPA handlers
+        true // capture phase — runs before SPA handlers
       );
     });
   }
@@ -395,18 +394,13 @@ function attachSubmitInterceptors(): void {
   });
 }
 
-// â”€â”€ Observe DOM for SPA dynamic elements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Observe DOM for SPA dynamic elements ─────────────────────────────────────
 
-let timeout: number;
 const observer = new MutationObserver(() => {
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    attachSubmitInterceptors();
-  }, 250); // Debounces execution to prevent infinite call stacks
+  attachSubmitInterceptors();
 });
 
 observer.observe(document.documentElement, { childList: true, subtree: true });
 
 // Initial attach
 attachSubmitInterceptors();
-

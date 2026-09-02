@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ShadowGuard AI",
+  "version": "1.0",
+  "description": "Redacts sensitive data across LLM interfaces",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://claude.ai/*"
+      ],
+      "js": ["src/content.js"]
+    }
+  ]
+}
